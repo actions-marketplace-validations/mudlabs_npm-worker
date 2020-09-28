@@ -1,0 +1,9 @@
+name: NPM Worker
+description: An action to init and manage node modules on your repo
+author: Mudlabs
+branding:
+  icon: package
+  color: yellow
+runs:
+  using: node12
+  main: index.js
