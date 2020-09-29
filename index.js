@@ -1,9 +1,8 @@
 const fs = require("fs");
 const yaml = require("js-yaml");
-const core = require("@actions/core");
 const github = require("@actions/github");
 
-const worker_parth = "./.github/npmworker.yaml";
+const worker_path = "./.github/npmworker.yaml";
 const no_worker = () => console.log("Could not locate an 'npmworker.yaml' file");
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
@@ -16,7 +15,9 @@ const isNonEmptyArray = obj => obj && Array.isArray(obj);
     const modules_path = data.path || "./";
     
     if (isNonEmptyArray(data.install)) {}
+    
     if (isNonEmptyArray(data.update)) {}
+    
     if (isNonEmptyArray(data.uninstall)) {}
     
   } catch (error) {
