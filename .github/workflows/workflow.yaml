@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install
-        id: install
-        run: npm install @actions/github && npm install @actions/core
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@v5.0.0
+#       - name: Install
+#         id: install
+#         run: npm install @actions/github && npm install @actions/core
+#       - name: Add & Commit
+#         uses: EndBug/add-and-commit@v5.0.0
