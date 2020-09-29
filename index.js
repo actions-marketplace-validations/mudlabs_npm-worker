@@ -1,4 +1,5 @@
 const fs = require("fs");
+const execa = require("execa");
 const yaml = require("js-yaml");
 const github = require("@actions/github");
 
@@ -12,14 +13,17 @@ const isNonEmptyArray = obj => obj && Array.isArray(obj);
     const file = async fs.promises.readFile(worker_parth, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
     
-    const modules_path = data.path || "./";
+    const modules_deplayment_path = data.path || "./";
     
-    if (isNonEmptyArray(data.install)) {}
+    // cd into the modules_deplayment_path
+        
+    if (isNonEmptyArray(data.install)) data.install.forEach(async package => await execa("npm install", package));
     
-    if (isNonEmptyArray(data.update)) {}
+    if (isNonEmptyArray(data.update)) data.update.forEach(async package => await execa("npm update", package));
     
-    if (isNonEmptyArray(data.uninstall)) {}
+    if (isNonEmptyArray(data.uninstall)) data.uninstall.forEach(async package => await execa("npm uninstall", package));
     
   } catch (error) {
+    console.log(error);
   }
 })();
