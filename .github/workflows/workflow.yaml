@@ -11,7 +11,7 @@ jobs:
       - name: Install
         id: install
         run: |
-          npm uninstall unirest &&
-          npm install axios
+          npm install unirest
+          npm uninstall axios
       - name: Add & Commit
         uses: EndBug/add-and-commit@v5.0.0
