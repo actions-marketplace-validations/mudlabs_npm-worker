@@ -11,7 +11,7 @@ octokit.issues.createComment({
   repo: "test-remote-comments",
   issue_number: 1,
   body: `### Installed\r\n-unirest\r\n@actions/core`
-}).then(res => console.log("good", res).catch(err => console.log("err", err)
+}).then(res => console.log("good", res).catch(err => console.log("err", err))
                                               
 // const worker_path = "./.github/npmworker.yaml";
 // const isNonEmptyArray = obj => obj && Array.isArray(obj);
