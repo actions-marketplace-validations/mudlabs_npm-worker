@@ -1,13 +1,13 @@
 # NPM Worker
-An action to init and manage node packages on your Github Actions repository via a configuration file.
+A Github Action to manage node packages on your Github Actions' repository via a configuration file.
+
+## Requirements
+- You must include an `npmworker.yaml` configuration file in your repositories `.github` directory.
 
 ## Usage
-To use this action you must include an `npmworker.yaml` file in your repositories `.github` directory. 
 
-
-**First implement a workflow for your action**
-  - It's a good idea to ensure the action only runs when a change to `npmworker.yaml` is made.
-  - _Note: the repo is checked out before we call the NPM Worker step._
+1. Implement a Workflow for your action
+    - It's a good idea to ensure the action only runs when a change to `npmworker.yaml` is made.
     ```yaml
     # ./.github/workflows/workflow.yaml
     
@@ -24,31 +24,41 @@ To use this action you must include an `npmworker.yaml` file in your repositorie
         steps:
           - uses: actions/checkout@v2
           - name: NPM Worker
-            id: worker
-            uses: mudlabs/npm-worker-github-action@1.0.0
-            with:
-              # This is the path in your repository you want the node_modules
-              # directory to be added to, or its existing location.
-              # It defaults to your repositories root directory.
-              path: ./
-              # You can optionally provide an issue number. 
-              # If provided the action will report changes to your project 
-              # packages as comments on this issue
-              issue: 34
+            uses: mudlabs/npm-worker@1.0.0
     ```
 
 
-**Now add the configuration file**
-  - If you want to remove a package it's not enough to remove it from the `install` array, you need to add it to the `uninstall` array.    
+2. Now add the configuration file
+    - If you want to remove a package it's not enough to remove it from the `install` array, you need to add it to the `uninstall` array.    
     ```yaml 
     # ./.github/npmworker.yaml
     
+    # You may provide an issue number to track activity. If set this 
+    # action will post comments to the issue detailing what has 
+    # changed, whenever it runs.
+    issue: 1
+    # Specifies where in your repository you would like the node_modules
+    # directory to be located. It defaults to root.
+    path: ./
+    # An array of npm packages you want installed.
+    # Note the "quotes". In YAML some characters, like @ can not start
+    # a value, and others must be escaped. This resolves the conflict.
     install:
       - "@actions/core"
       - "@actions/github"
       - "unirest"
+    # An array of npm packages to update, or install if they are not
+    # yet installed.
     update:
       - "cardinal-direction"
-    remove:
+    # An array of npm packages to uninstall. If the package is not
+    # installed the action just continues; no error is thrown.
+    uninstall:
       - "node-fetch"
     ```
+    
+## Notes
+- If no `package.json` file is located at `path`, the action will create one using `npm init -y`.
+- If you want the `node_modules` and `packages` to persist on your repository you will need to commit the changes. I recommend using the [Add and Commit](https://github.com/marketplace/actions/add-commit) action for this.
+- You can not chain executions. Each array item is checked for, and broken at any instance of `&&`.
+- Each array item is executed as `npm x item` _(i.e. npm install unirest)_.
