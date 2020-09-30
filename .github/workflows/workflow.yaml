@@ -2,9 +2,14 @@ name: NPM Worker
 
 on:
   push:
+    
+env:
+  github: ${{ secrets.GITHUB_TOKEN }} 
 
 jobs:
   prep:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: worker
+        uses: ./
