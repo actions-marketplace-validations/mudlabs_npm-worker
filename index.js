@@ -1,11 +1,13 @@
 const fs = require("fs");
 const execa = require("execa");
 const yaml = require("js-yaml");
+const core = require("@actions/core");
 const github = require("@actions/github");
 
 const worker_path = "./.github/npmworker.yaml";
-const no_worker = () => console.log("Could not locate an 'npmworker.yaml' file");
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
+const no_worker = () => core.setFailed("Could not locate the 'npmworker.yaml' configuration file.");
+const current_path = "";// the checked out directory path the action is called from;
 
 (async function(){
   try {
@@ -13,9 +15,11 @@ const isNonEmptyArray = obj => obj && Array.isArray(obj);
     const file = async fs.promises.readFile(worker_parth, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
     
-    const modules_deplayment_path = data.path || "./";
+    // Should be relative to current_path
+    const node_modules_path = data.path || "./";
     
-    // cd into the modules_deplayment_path
+    // cd into the node_modules_path
+    await execa("cd", node_modules_path);
         
     if (isNonEmptyArray(data.install)) data.install.forEach(async package => await execa("npm install", package));
     
@@ -24,6 +28,6 @@ const isNonEmptyArray = obj => obj && Array.isArray(obj);
     if (isNonEmptyArray(data.uninstall)) data.uninstall.forEach(async package => await execa("npm uninstall", package));
     
   } catch (error) {
-    console.log(error);
+    core.setFailed(error);
   }
 })();
