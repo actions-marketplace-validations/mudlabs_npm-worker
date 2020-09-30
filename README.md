@@ -1,5 +1,5 @@
 # NPM Worker
-A Github Action to manage node packages on your Github Actions' repository via a configuration file.
+Manage node packages on your Github Actions' repository via a configuration file.
 
 ## Table of Contents
 - [Requirements](#requirements)
