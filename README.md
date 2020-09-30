@@ -1,6 +1,11 @@
 # NPM Worker
 A Github Action to manage node packages on your Github Actions' repository via a configuration file.
 
+## Table of Contents
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Notes](#notes)
+
 ## Requirements
 - You must include an `npmworker.yaml` configuration file in your repositories `.github` directory.
 
