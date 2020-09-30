@@ -4,7 +4,7 @@ const yaml = require("js-yaml");
 const core = require("@actions/core");
 const github = require("@actions/github");
 
-const octokit = github.getOctokit(process.env.github);
+const octokit = github.getOctokit(process.env.token);
 
 octokit.issues.createComment({
   owner: "samdonald",
