@@ -4,6 +4,16 @@ author: Mudlabs
 branding:
   icon: package
   color: yellow
+inputs:
+  token:
+    required: false
+    description: A secret access key authorizing the action to post comments to your repository.
+  issue:
+    required: false
+    description: You repositories issue number where you want the action to post activity comments.
+  path:
+    required: false
+    description: The path in your repository where node_modules is, or will be.
 runs:
   using: node12
   main: index.js
