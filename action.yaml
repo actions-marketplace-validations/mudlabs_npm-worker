@@ -6,7 +6,7 @@ branding:
   color: yellow
 outputs:
   activity:
-    description: A description of the changes made.
+    description: Describes the activity perfomed by the action.
 runs:
   using: node12
-  main: index.js
+  main: action.js
