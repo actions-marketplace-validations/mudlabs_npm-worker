@@ -1,3 +1,11 @@
+[action-badge]: https://img.shields.io/badge/-Action-blue?logo=github&style=for-the-badge
+[paypal-badge]: https://img.shields.io/badge/-Support-f3f4f6?logo=paypal&style=for-the-badge
+[brave-badge]: https://img.shields.io/badge/-Tip-f3f4f6?logo=brave&style=for-the-badge
+
+[![Github Action][action-badge]](https://github.com/marketplace/action/npm-worker)
+&nbsp;
+[![Support Mudlabs][paypal-badge]](https://paypal.com/paypalme/mudlabs/5usd)
+
 # NPM Worker
 Manage node packages on your Github Actions' repository via a configuration file.
 
