@@ -1,4 +1,4 @@
-[action-badge]: https://img.shields.io/badge/-Action-blue?logo=github&style=for-the-badge
+[action-badge]: https://img.shields.io/badge/-Action-24292e?logo=github&style=for-the-badge
 [paypal-badge]: https://img.shields.io/badge/-Support-f3f4f6?logo=paypal&style=for-the-badge
 [brave-badge]: https://img.shields.io/badge/-Tip-f3f4f6?logo=brave&style=for-the-badge
 
