@@ -11,56 +11,62 @@ Manage node packages on your Github Actions' repository via a configuration file
 
 ## Usage
 
-1. Implement a Workflow for your action
-    - It's a good idea to ensure the action only runs when a change to `npmworker.yaml` is made.
-    ```yaml
-    # ./.github/workflows/workflow.yaml
+#### 1. Implement a Workflow for your action
+- It's a good idea to ensure the action only runs when a change to `npmworker.yaml` is made.
+```yaml
+# ./.github/workflows/workflow.yaml
+
+name: My Action Workflow
+on:
+  push:
+    branches:
+      - master:
+    paths:
+      - .github/npmworker.yaml
+jobs:
+  prep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: NPM Worker
+        uses: mudlabs/npm-worker@1.0.0
+```
     
-    name: My Action Workflow
-    on:
-      push:
-        branches:
-          - master:
-        paths:
-          - .github/npmworker.yaml
-    jobs:
-      prep:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v2
-          - name: NPM Worker
-            uses: mudlabs/npm-worker@1.0.0
-    ```
+
+#### 2. Now add the configuration file
+- If you want to remove a package it's not enough to remove it from the `install` array, you need to add it to the `uninstall` array.    
+```yaml 
+# ./.github/npmworker.yaml
+
+# You may provide an issue number to track activity. If set this 
+# action will post comments to the issue detailing what has 
+# changed, whenever it runs.
+issue: 1
+# Specifies where in your repository you would like the node_modules
+# directory to be located. It defaults to root.
+path: ./
+# An array of npm packages you want installed.
+# Note the "quotes". In YAML some characters, like @ can not start
+# a value, and others must be escaped. This resolves the conflict.
+install:
+  - "@actions/core"
+  - "@actions/github"
+  - "unirest"
+# An array of npm packages to update, or install if they are not
+# yet installed.
+update:
+  - "cardinal-direction"
+# An array of npm packages to uninstall. If the package is not
+# installed the action just continues; no error is thrown.
+uninstall:
+  - "node-fetch"
+```
 
 
-2. Now add the configuration file
-    - If you want to remove a package it's not enough to remove it from the `install` array, you need to add it to the `uninstall` array.    
-    ```yaml 
-    # ./.github/npmworker.yaml
-    
-    # You may provide an issue number to track activity. If set this 
-    # action will post comments to the issue detailing what has 
-    # changed, whenever it runs.
-    issue: 1
-    # Specifies where in your repository you would like the node_modules
-    # directory to be located. It defaults to root.
-    path: ./
-    # An array of npm packages you want installed.
-    # Note the "quotes". In YAML some characters, like @ can not start
-    # a value, and others must be escaped. This resolves the conflict.
-    install:
-      - "@actions/core"
-      - "@actions/github"
-      - "unirest"
-    # An array of npm packages to update, or install if they are not
-    # yet installed.
-    update:
-      - "cardinal-direction"
-    # An array of npm packages to uninstall. If the package is not
-    # installed the action just continues; no error is thrown.
-    uninstall:
-      - "node-fetch"
-    ```
+#### Output
+- `activity`: A markdown flavourd description of the activity performed by the action
+  - If `issue` is set in `npmworker.yaml`, this is the comment sent to that issue.
+
     
 ## Notes
 - If no `package.json` file is located at `path`, the action will create one using `npm init -y`.
