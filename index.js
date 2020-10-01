@@ -4,14 +4,18 @@ const yaml = require("js-yaml");
 const core = require("@actions/core");
 const github = require("@actions/github");
 
-const octokit = github.getOctokit(process.env.token);
+const token = core.getInput("token");
 
-octokit.issues.createComment({
-  owner: "samdonald",
-  repo: "test-remote-comments",
-  issue_number: 1,
-  body: `### Installed\r\n-unirest\r\n@actions/core`
-}).then(res => console.log("good", res)).catch(err => console.log("err", err));
+if (token) {
+  const octokit = github.getOctokit(token);
+
+  octokit.issues.createComment({
+    owner: "samdonald",
+    repo: "test-remote-comments",
+    issue_number: 1,
+    body: `### Installed\r\n-unirest\r\n@actions/core`
+  }).then(res => console.log("good", res)).catch(err => console.log("err", err));
+}
                                               
 // const worker_path = "./.github/npmworker.yaml";
 // const isNonEmptyArray = obj => obj && Array.isArray(obj);
