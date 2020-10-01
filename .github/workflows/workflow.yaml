@@ -12,4 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: worker
-        uses: ./
+        run: |
+          rm -r node_modules
+          
