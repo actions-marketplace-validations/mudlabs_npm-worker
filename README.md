@@ -24,7 +24,7 @@ Manage node packages on your Github Actions' repository via a configuration file
 ```yaml
 # ./.github/workflows/workflow.yaml
 
-name: My Action Workflow
+name: NPM Workflow
 on:
   push:
     branches:
@@ -38,6 +38,14 @@ jobs:
       - uses: actions/checkout@v2
       - name: NPM Worker
         uses: mudlabs/npm-worker@1.0.0
+        id: npm_worker
+      - name: Log
+        if: success()
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue: ${{ steps.worker.outputs.issue }}
+          body: ${{ steps.worker.outputs.activity }}
+        
 ```
     
 
