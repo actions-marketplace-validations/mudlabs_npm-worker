@@ -14,4 +14,5 @@ jobs:
       - name: worker
         run: |
           rm -r node_modules
-          
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v5.0.0
