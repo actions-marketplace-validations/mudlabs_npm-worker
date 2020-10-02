@@ -22,7 +22,7 @@ Manage node packages on your Github action repository.
 #### 1. Implement a Workflow for your action
 - It's a good idea to ensure the action only runs when a change to `npmworker.yaml` is made.
 ```yaml
-# ./.github/workflows/workflow.yaml
+# ./.github/workflows/npm.yaml
 
 name: NPM Workflow
 on:
@@ -32,20 +32,13 @@ on:
     paths:
       - .github/npmworker.yaml
 jobs:
-  prep:
+  npm:
     runs-on: ubuntu-latest
+    name: NPM Worker
     steps:
       - uses: actions/checkout@v2
-      - name: NPM Worker
-        uses: mudlabs/npm-worker@1.0.0
-        id: npm_worker
-      - name: Log
-        if: success()
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue: ${{ steps.worker.outputs.issue }}
-          body: ${{ steps.worker.outputs.activity }}
-        
+      - name: Worker
+        uses: mudlabs/npm-worker@1.0.0    
 ```
     
 
