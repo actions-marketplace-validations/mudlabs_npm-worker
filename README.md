@@ -43,38 +43,38 @@ jobs:
     
 
 #### 2. Now add the configuration file
-- If you want to remove a package it's not enough to remove it from the `install` array, you need to add it to the `uninstall` array.    
+- If you want to remove a package it's not enough to remove it from the `install` array, you need to add it to the `uninstall` array.   
+
+| Prop | Description | Default |
+| :--- | :--- | :--- |
+| `issue` | You may provide an issue number to track activity. If set this action will post comments to the issue detailing what has changed, whenever it runs. | |
+| `path` | Specifies where in your repository you would like the _node_modules_ directory to be located. | `./` |
+| `install` | An array of npm packages you want installed. | |
+| `update` | An array of packages to update, or install if they are not installed. | |
+| `uninstall` | An array of packages to uninstall. | |
+
+**Example Configuration**
 ```yaml 
 # ./.github/npmworker.yaml
 
-# You may provide an issue number to track activity. If set this 
-# action will post comments to the issue detailing what has 
-# changed, whenever it runs.
 issue: 1
-# Specifies where in your repository you would like the node_modules
-# directory to be located. It defaults to root.
-path: ./
-# An array of npm packages you want installed.
-# Note the "quotes". In YAML some characters, like @ can not start
-# a value, and others must be escaped. This resolves the conflict.
+path: ./dis
 install:
   - "@actions/core"
   - "@actions/github"
   - "unirest"
-# An array of npm packages to update, or install if they are not
-# yet installed.
 update:
   - "cardinal-direction"
-# An array of npm packages to uninstall. If the package is not
-# installed the action just continues; no error is thrown.
 uninstall:
   - "node-fetch"
 ```
 
 
 #### Output
-- `activity`: A markdown flavourd description of the activity performed by the action
-  - If `issue` is set in `npmworker.yaml`, this is the comment sent to that issue.
+
+| Prop | Description |
+| :--- | :--- |
+| `activity` | A markdown flavourd description of the activity performed by the action. If `issue` is set in the configuration file, this is the comment sent to that issue. |
 
     
 ## Notes
