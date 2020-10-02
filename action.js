@@ -19,10 +19,28 @@ const no_worker = () => core.setFailed("Could not locate the 'npmworker.yaml' co
 const activityToReport = () => "".concat(description, install, update, uninstall) !== "";
 const buildActivityReport = () => branding.concat(" ", description, install, update, uninstall);
 
+async function mutateConfig(config) {
+  // cleans the config file so it doesn't still request we install packages that have been installed etc...
+  await fs.promises.writeFile(worker_path, yaml.safeDump(config))
+}
+
+const shell = command => packages => {
+  let output;
+  packages.forEach(async package => {
+      try {
+        output = await execa(`npm ${command}`, [package]);
+      } catch (error) {
+        
+      } finally {
+        
+      }
+  });
+};
+
 (async function(){
   try {
     if (!fs.existsSync(worker_path)) return no_worker();
-    const file = await fs.promises.readFile(worker_parth, { encoding: "utf-8" });
+    const file = await fs.promises.readFile(worker_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
     
     // Should be relative to current_path
@@ -36,20 +54,9 @@ const buildActivityReport = () => branding.concat(" ", description, install, upd
     // If node_modules and package already exist replace {{description}} in activity with ""
     // else replace with description.
     
-    const nodesManager = command => packages => {
-      let output
-      packages.forEach(async package => {
-        try {
-          output = await execa(`npm ${command}`, [package]);
-        } catch (error) {
-        } finally {
-        }
-      });
-    }
-    
-    const installed = nodeManager("install")(data.install);
-    const updated = nodeManager("update")(data.update);
-    const uninstalled = nodeManager("uninstall")(data.uninstall);
+    const installed = shell("install")(data.install);
+    const updated = shell("update")(data.update);
+    const uninstalled = shell("uninstall")(data.uninstall);
         
     
     if (activityToReport()) {
