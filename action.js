@@ -10,11 +10,14 @@ const octokit = github.getOctokit(token);
 const worker_path = "./.github/npmworker.yaml";
 const current_path = "";// the checked out directory path the action is called from;
 
-const marketplace = "https://github.com/marketplace/activity/npm-worker";
-let activity = `[NPM Worker](${marketplace}) {{description}}\n\n{{install}}\n{{update}}\n{{uninstall}}\n`;
+const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
+let description = install = update = uninstall = "";
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 const no_worker = () => core.setFailed("Could not locate the 'npmworker.yaml' configuration file.");
+
+const activityToReport = () => "".concat(description, install, update, uninstall) !== "";
+const buildActivityReport = () => branding.concat(" ", description, install, update, uninstall);
 
 (async function(){
   try {
@@ -32,57 +35,38 @@ const no_worker = () => core.setFailed("Could not locate the 'npmworker.yaml' co
     // 2) is there a package.json file at path
     // If node_modules and package already exist replace {{description}} in activity with ""
     // else replace with description.
+    
+    const nodesManager = command => packages => {
+      let output
+      packages.forEach(async package => {
+        try {
+          output = await execa(`npm ${command}`, [package]);
+        } catch (error) {
+        } finally {
+        }
+      });
+    }
+    
+    const installed = nodeManager("install")(data.install);
+    const updated = nodeManager("update")(data.update);
+    const uninstalled = nodeManager("uninstall")(data.uninstall);
         
-    if (isNonEmptyArray(data.install)) {
-      let install = `Installed\n`;
-      let didInstall = false;
-      data.install.forEach(async package => {
-        const installed = await execa("npm install", package);
-        if (installed) {
-          didInstall = true;
-          install += `- ${package}\n`
-        }
-        return;
-      });
+    
+    if (activityToReport()) {
+      const activity = buildActivityReport();
+      core.setOutput(activity);
+      if (data.issue) {
+        await octokit.issues.createComment({
+          owner: github.context.payload.repository.owner.login,
+          repo: github.context.payload.repository.name,
+          issue_number: data.issue,
+          body: activity
+        });
+      }
     }
     
-    if (isNonEmptyArray(data.update)) {
-      let update = `Updated\n`;
-      let didUpdate = false;
-      data.update.forEach(async package => {
-        const updated = await execa("npm update", package)
-        if (updated) {
-          didUpdate = true;
-          update += `- ${package}\n`
-        }
-        return;
-      });
-    }
-    
-    if (isNonEmptyArray(data.uninstall)) {
-      let uninstall = `Uninstall\n`;
-      let didUninstall = false;
-      data.uninstall.forEach(async package => {
-        const uninstalled = await execa("npm uninstall", package);
-        if (uninstalled) {
-          didUninstall = true;
-          uninstall += `- ${package}\n`;
-        }
-        return;
-      });
-    }
-    
-    core.setOutput(activity);
-    if (data.issue && activityToReport) {
-      await octokit.issues.createComment({
-        owner: github.context.payload.repository.owner.login,
-        repo: github.context.payload.repository.name,
-        issue_number: data.issue,
-        body: activity
-      });
-    }
     return;
   } catch (error) {
-    core.setFailed(error);
+    core.setFailed(error.message);
   }
 })();
