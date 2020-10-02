@@ -4,6 +4,10 @@ author: Mudlabs
 branding:
   icon: package
   color: yellow
+inputs:
+  token:
+    description: GITHUB_TOKEN or a PAT for the repository
+    default: ${{ github.token }}
 outputs:
   activity:
     description: Describes the activity perfomed by the action.
