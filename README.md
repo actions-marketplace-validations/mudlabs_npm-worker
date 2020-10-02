@@ -53,8 +53,8 @@ jobs:
 | `update` | An array of packages to update, or install if they are not installed. | |
 | `uninstall` | An array of packages to uninstall. | |
 
-**Example Configuration**
 ```yaml 
+# Example Configuration.
 # ./.github/npmworker.yaml
 
 issue: 1
