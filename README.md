@@ -48,7 +48,7 @@ jobs:
 | Prop | Description | Default |
 | :--- | :--- | :--- |
 | `issue` | You may provide an issue number to track activity. If set this action will post comments to the issue detailing what has changed, whenever it runs. | |
-| `path` | Specifies where in your repository you would like the _node_modules_ directory to be located. | `./` |
+| `path` | Specifies a path from your repository _root_, where you would like the _node_modules_ directory to be located. | `./` |
 | `install` | An array of npm packages you want installed. | |
 | `update` | An array of packages to update, or install if they are not installed. | |
 | `uninstall` | An array of packages to uninstall. | |
