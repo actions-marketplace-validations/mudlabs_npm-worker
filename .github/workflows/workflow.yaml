@@ -11,10 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-#       - name: worker
-#         run: |
-#           npm install @actions/core
-#           npm install js-yaml
-#           npm install execa
-#       - name: Add & Commit
-#         uses: EndBug/add-and-commit@v5.0.0
+      - name: worker
+        run: |
+          npm init -y
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v5.0.0
