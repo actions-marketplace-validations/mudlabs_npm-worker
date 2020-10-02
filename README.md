@@ -47,8 +47,9 @@ jobs:
 
 | Prop | Description | Default |
 | :--- | :--- | :--- |
+| `mutate` | Specifies the action should edit the configuration file apon execution. This way every time you update the file it's a clean list of commands. | `false` |
 | `issue` | You may provide an issue number to track activity. If set this action will post comments to the issue detailing what has changed, whenever it runs. | |
-| `path` | Specifies a path from your repository _root_, where you would like the _node_modules_ directory to be located. | `./` |
+| `path` | Specifies a path from your repository _root_, where you would like _node_modules_ located. | `./` |
 | `install` | An array of npm packages you want installed. | |
 | `update` | An array of packages to update, or install if they are not installed. | |
 | `uninstall` | An array of packages to uninstall. | |
@@ -57,12 +58,13 @@ jobs:
 # Example Configuration.
 # ./.github/npmworker.yaml
 
+mutate: true
 issue: 1
 path: ./dis
 install:
-  - "@actions/core"
   - "@actions/github"
-  - "unirest"
+  - "unirest --save"
+  - "gulp --saveDev"
 update:
   - "cardinal-direction"
 uninstall:
