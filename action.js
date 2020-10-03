@@ -11,12 +11,10 @@ const worker_path = "./.github/npmworker.yaml";
 const current_path = "";// the checked out directory path the action is called from;
 
 const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
-let description = install = update = uninstall = "";
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 const no_worker = () => core.setFailed("Could not locate the 'npmworker.yaml' configuration file.");
 
-const activityToReport = () => "".concat(description, install, update, uninstall) !== "";
 const buildActivityReport = () => branding.concat(" ", description, install, update, uninstall);
 
 async function mutateConfig(config) {
@@ -24,17 +22,16 @@ async function mutateConfig(config) {
   await fs.promises.writeFile(worker_path, yaml.safeDump(config))
 }
 
-const shell = command => packages => {
-  let output;
-  packages.forEach(async package => {
+const shell = command => async packages => {
+  const activity = await Promise.all(packages.map(async package => {
       try {
-        output = await execa(`npm ${command}`, [package]);
+        const output = await execa(`npm ${command}`, [package]);
+        return output;
       } catch (error) {
-        
-      } finally {
-        
-      }
+        return error
+      } 
   });
+  return activity;
 };
 
 (async function(){
@@ -54,13 +51,13 @@ const shell = command => packages => {
     // If node_modules and package already exist replace {{description}} in activity with ""
     // else replace with description.
     
-    const installed = shell("install")(data.install);
-    const updated = shell("update")(data.update);
-    const uninstalled = shell("uninstall")(data.uninstall);
+    const installed = await shell("install")(data.install);
+    const updated = await shell("update")(data.update);
+    const uninstalled = await shell("uninstall")(data.uninstall);
+    const activityToReport = installed.concat(updated, uninstalled).length > 0;
         
-    
-    if (activityToReport()) {
-      const activity = buildActivityReport();
+    if (activityToReport) {
+      const activity = buildActivityReport(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
         await octokit.issues.createComment({
@@ -72,7 +69,6 @@ const shell = command => packages => {
       }
     }
     
-    return;
   } catch (error) {
     core.setFailed(error.message);
   }
