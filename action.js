@@ -4,16 +4,12 @@ const yaml = require("js-yaml");
 const core = require("@actions/core");
 const github = require("@actions/github");
 
-const token = core.getInput("token");
-const octokit = github.getOctokit(token);
-                                              
-const worker_path = "./.github/npmworker.yaml";
+
 const current_path = "";// the checked out directory path the action is called from;
 
 const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
-const no_worker = () => core.setFailed("Could not locate the 'npmworker.yaml' configuration file.");
 
 const buildActivityReport = () => branding.concat(" ", description, install, update, uninstall);
 
@@ -23,6 +19,7 @@ const cleanConfigurationFile = path => async data => {
     for (const prop in data) data[prop] instanceof Array ? data[prop].length = 0 : null;
     const file = await fs.promises.writeFile(path, data);
   } catch (error) {
+    console.log(error);
   }
 };
 
@@ -32,16 +29,42 @@ const shell = command => async packages => {
         const output = await execa(`npm ${command}`, [package]);
         return output;
       } catch (error) {
-        return error
+        return error;
       } 
-  });
+  }));
   return activity;
+};
+
+const getWorkerConfigPath = workflow => {
+  const config_name = "npmworker.config.yaml"
+  const workflow_dir_path = workflow.path.substring(0, workflow.lastIndexOf("/"));
+  const workflow_config = `${workflow_dir_path}/${config_name}`;
+  const github_config = `.github/${config_name}`;
+  const root_config = `./${config_name}`;
+  
+  const path = fs.existsSync(workflow_config) 
+    ? workflow_config : fs.existsSync(github_config)
+    ? github_config : fs.existsSync(root_config)
+    ? root_config : false;
+  
+  return path;
 };
 
 (async function(){
   try {
-    if (!fs.existsSync(worker_path)) return no_worker();
-    const file = await fs.promises.readFile(worker_path, { encoding: "utf-8" });
+    const token = core.getInput("token");
+    const octokit = github.getOctokit(token);
+    
+    const workflows = await octokit.request(
+      'GET /repos/:owner/:repo/actions/workflows', 
+      { owner, repo }
+    );
+    const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow);
+    const worker_config_path = getWorkerConfigPath(workflow);
+    
+    if (!worker_config_path) return core.setFailed("Could not locate the 'npmworker.config.yaml' file.");
+    
+    const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
     
     // Should be relative to current_path
