@@ -17,10 +17,14 @@ const no_worker = () => core.setFailed("Could not locate the 'npmworker.yaml' co
 
 const buildActivityReport = () => branding.concat(" ", description, install, update, uninstall);
 
-async function mutateConfig(config) {
-  // cleans the config file so it doesn't still request we install packages that have been installed etc...
-  await fs.promises.writeFile(worker_path, yaml.safeDump(config))
-}
+
+const cleanConfigurationFile = path => async data => {
+  try {
+    for (const prop in data) data[prop] instanceof Array ? data[prop].length = 0 : null;
+    const file = await fs.promises.writeFile(path, data);
+  } catch (error) {
+  }
+};
 
 const shell = command => async packages => {
   const activity = await Promise.all(packages.map(async package => {
