@@ -50,7 +50,7 @@ jobs:
 
 | Prop | Description | Default |
 | :--- | :--- | :--- |
-| `clean` | Specifies the action should edit the configuration file apon execution. This way every time you update the file it's a clean list of commands. Only the `install`, `update`, and `uninstall` will be emptied, and they will be regardless of execution outcome. | `false` |
+| `clean` | Specifies the action should edit the configuration file apon execution. This way every time you update the file it's a clean list of commands. Only the `install`, `update`, and `uninstall` arrays will be emptied, and they will be regardless of the package execution outcome. | `false` |
 | `issue` | You may provide an issue number to track activity. If set this action will post comments to the issue detailing what has changed, whenever it runs. | |
 | `path` | Specifies a path from your repository _root_, where you would like _node_modules_ located. | `./` |
 | `install` | An array of npm packages you want installed. | |
@@ -67,7 +67,6 @@ path: ./dis
 install:
   - "@actions/github"
   - "unirest"
-  - "gulp"
 update:
   - "cardinal-direction"
 uninstall:
