@@ -18,7 +18,7 @@ Manage node packages on your Github action repository.
 
 | Requirement | Description |
 | :--- | :--- |
-| `npmworker.config.yaml` | You must include a YAML configuration file in your repository. This file should be in your `.github` directory, or kept with the workflow file that triggured the action. |
+| `npmworker.config.yaml` | You must include a YAML configuration file in your repository. The action first looks for this file in the directory of the `workflow` that triggered it, then in `.github`, and finally in root _(`./`)_. |
 
 ## Usage
 
