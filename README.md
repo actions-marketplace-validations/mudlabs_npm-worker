@@ -15,22 +15,25 @@ Manage node packages on your Github action repository.
 - [Notes](#notes)
 
 ## Requirements
-- You must include an `npmworker.yaml` configuration file in your repositories `.github` directory.
+
+| Requirement | Description |
+| :--- | :--- |
+| `npmworker.config.yaml` | You must include a YAML configuration file in your repository. This file should be in your `.github` directory, or kept with the workflow file that triggured the action. |
 
 ## Usage
 
 #### 1. Implement a Workflow for your action
-- It's a good idea to ensure the action only runs when a change to `npmworker.yaml` is made.
+- It's a good idea to ensure the action only runs when a change to `npmworker.config.yaml` is made.
 ```yaml
-# ./.github/workflows/npm.yaml
+# ./.github/workflows/npmworker.yaml
 
-name: NPM Workflow
+name: NPM Worker
 on:
   push:
     branches:
       - master:
     paths:
-      - .github/npmworker.yaml
+      - .github/workflows/npmworker.config.yaml
 jobs:
   npm:
     runs-on: ubuntu-latest
@@ -56,7 +59,7 @@ jobs:
 
 ```yaml 
 # Example Configuration.
-# ./.github/npmworker.yaml
+# ./.github/workflows/npmworker.config.yaml
 
 clean: true
 issue: 1
@@ -76,7 +79,7 @@ uninstall:
 
 | Prop | Description |
 | :--- | :--- |
-| `activity` | A markdown flavourd description of the activity performed by the action. If `issue` is set in the configuration file, this is the comment sent to that issue. |
+| `activity` | A markdown flavourd description of the activity performed by the action. If `issue` is set as `true` in the configuration file, this is the comment sent to that issue. |
 
     
 ## Notes
