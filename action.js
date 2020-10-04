@@ -26,7 +26,9 @@ const cleanConfigurationFile = path => async data => {
 const shell = command => async packages => {
   const activity = await Promise.all(packages.map(async package => {
       try {
-        const output = await execa(`npm ${command}`, [package]);
+        // instead of changing the directory path to node_modules and package befor running the worker command,
+        // can we pass this into the one execa call?
+        const output = await execa(`npm ${command} --prefix ${node_modules_path} ${package_json_path}`, [package]);
         return output;
       } catch (error) {
         return error;
