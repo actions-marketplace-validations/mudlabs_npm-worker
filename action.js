@@ -7,12 +7,44 @@ const github = require("@actions/github");
 
 const current_path = "";// the checked out directory path the action is called from;
 
-const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
-const buildActivityReport = () => branding.concat(" ", description, install, update, uninstall);
-
+const buildActivityReport = did_initiat => (install, update, uninstall) => {
+  
+  const buildList = title => items => items.length > 0
+    ? items.reduce((list, item) => list += `- ${item}\n`, `**${title}**\n`)
+    : "";
+  
+  const buildDescription = () => {
+    const numberOfPackages = items => {
+      const number = items.length;
+      return `${number} package${number === 1} ? "" : "s"`;
+    }
+    const tag = title => items => items.length > 0 ? `_${title}_ ${numberOfPackages(items)}` : "";
+    const pre = did_initiat ? `Initiated \`node_modules\` on this repo.` : "";
+    
+    const installed = tag("install")(install);
+    const updated = tag("update")(update);
+    const uninstalled = tag("uninstall")(uninstall);
+    const opperations = ([installed, updated, uninstalled]
+                         .filter(item => item !== "")
+                         .map((item, index, array) => array.length > 1 && index === array.length - 1 ? `and ${item}` : item)
+                        ).join(", ");
+    
+    return `${pre} Your configuration requested this action ${opperations}.\n\n`;
+  }
+  
+  // <a href="https://github.com/marketplace/activity/npm-worker"><img src="" width="21"/> NPM Worker</a>
+  const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
+  const description = buildDescription();
+  const installed = buildList("Installed")(install)
+  const updated = buildList("Updated")(update)
+  const uninstalled = buildList("Uninstalled")(uninstall);
+  
+  const report = `${branding} ${description}\n\n${installed}\n${updated}\n${uninstalled}`;
+  return report;
+}
 
 const cleanConfigurationFile = path => async data => {
   try {
@@ -63,7 +95,6 @@ const getWorkerConfigPath = workflow => {
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow);
     const worker_config_path = getWorkerConfigPath(workflow);
-    
     if (!worker_config_path) return core.setFailed("Could not locate the 'npmworker.config.yaml' file.");
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
@@ -71,24 +102,19 @@ const getWorkerConfigPath = workflow => {
     
     // Should be relative to current_path
     const node_modules_path = data.path || "./";
+    const valid_node_modules_path = await fs.exists(node_modules_path);
+    const has_package_json = await fs.exists(`${node_modules_path}/package.json`);
+    if (!valid_node_modules_path) return core.setFailed(`The path for node_modules does not exist.`);
+    if (!has_package_json) await execa.command(`cd ${node_modules_path} && npm init -y`);
     
-    // 1) does the node_modules_path exist?
-    if (fs.existsSync(node_modules_path)) {
-      if (fs.existsSync(`${node_modules_path}/package.json`) {
-          await execa("cd "+node_modules_path+" &&", ["npm init -y"]);
-      }
-    } else {
-      return core.setFailed(`The path for node_modules does not exist ${node_modules_path}`);
-    }
-    
-   
+    // run the requested shell commands
     const installed = await shell("install")(data.install);
     const updated = await shell("update")(data.update);
     const uninstalled = await shell("uninstall")(data.uninstall);
     const activityToReport = installed.concat(updated, uninstalled).length > 0;
         
     if (activityToReport) {
-      const activity = buildActivityReport(installed, updated, uninstalled);
+      const activity = buildActivityReport(!has_package_json)(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
         const response = await octokit.issues.createComment({
