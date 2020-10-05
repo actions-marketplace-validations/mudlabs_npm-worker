@@ -5,8 +5,8 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 
 
-const current_path = "";// the checked out directory path the action is called from;
-
+const current_path = github.context.workspace;// the checked out directory path the action is called from;
+console.log(current_path);
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
