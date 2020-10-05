@@ -72,14 +72,16 @@ const getWorkerConfigPath = workflow => {
     // Should be relative to current_path
     const node_modules_path = data.path || "./";
     
-    // cd into the node_modules_path
-    await execa("cd", node_modules_path);
+    // 1) does the node_modules_path exist?
+    if (fs.existsSync(node_modules_path)) {
+      if (fs.existsSync(`${node_modules_path}/package.json`) {
+          await execa("cd "+node_modules_path+" &&", ["npm init -y"]);
+      }
+    } else {
+      return core.setFailed(`The path for node_modules does not exist ${node_modules_path}`);
+    }
     
-    // 1) is there a node_modules directory at path
-    // 2) is there a package.json file at path
-    // If node_modules and package already exist replace {{description}} in activity with ""
-    // else replace with description.
-    
+   
     const installed = await shell("install")(data.install);
     const updated = await shell("update")(data.update);
     const uninstalled = await shell("uninstall")(data.uninstall);
@@ -89,7 +91,7 @@ const getWorkerConfigPath = workflow => {
       const activity = buildActivityReport(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
-        await octokit.issues.createComment({
+        const response = await octokit.issues.createComment({
           owner: github.context.payload.repository.owner.login,
           repo: github.context.payload.repository.name,
           issue_number: data.issue,
