@@ -10,10 +10,10 @@ const current_path = "";// the checked out directory path the action is called f
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
-const buildActivityReport = did_initiat => (install, update, uninstall) => {
+const buildActivityReport = (install, update, uninstall) => {
   
   const buildList = title => items => items.length > 0
-    ? items.reduce((list, item) => list += `- ${item}\n`, `**${title}**\n`)
+    ? items.reduce((list, item) => list += `- ${item}\n`, `**${title}**\n`) + `\n`
     : "";
   
   const buildDescription = () => {
@@ -22,7 +22,6 @@ const buildActivityReport = did_initiat => (install, update, uninstall) => {
       return `${number} package${number === 1} ? "" : "s"`;
     }
     const tag = title => items => items.length > 0 ? `_${title}_ ${numberOfPackages(items)}` : "";
-    const pre = did_initiat ? `Initiated \`node_modules\` on this repo.` : "";
     
     const installed = tag("install")(install);
     const updated = tag("update")(update);
@@ -32,17 +31,20 @@ const buildActivityReport = did_initiat => (install, update, uninstall) => {
                          .map((item, index, array) => array.length > 1 && index === array.length - 1 ? `and ${item}` : item)
                         ).join(", ");
     
-    return `${pre} Your configuration requested this action ${opperations}.\n\n`;
+    return `An update to your configuration file requested the action ${opperations}.\n\n`;
   }
   
-  // <a href="https://github.com/marketplace/activity/npm-worker"><img src="" width="21"/> NPM Worker</a>
+  const sender = github.context.payload.sender;
+  const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
+  const commit = `Triggered by commit ${github.context.sha}`;
+  // <a href="https://github.com/marketplace/activity/npm-worker"><img src="https://github.com" width="21"/> NPM Worker</a>
   const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
   const description = buildDescription();
   const installed = buildList("Installed")(install)
   const updated = buildList("Updated")(update)
   const uninstalled = buildList("Uninstalled")(uninstall);
   
-  const report = `${branding} ${description}\n\n${installed}\n${updated}\n${uninstalled}`;
+  const report = `> ${requester}\n${commit}\n\n${branding} ${description}\n\n${installed}${updated}${uninstalled}`;
   return report;
 }
 
@@ -114,7 +116,7 @@ const getWorkerConfigPath = workflow => {
     const activityToReport = installed.concat(updated, uninstalled).length > 0;
         
     if (activityToReport) {
-      const activity = buildActivityReport(!has_package_json)(installed, updated, uninstalled);
+      const activity = buildActivityReport(!has_package_json)(path_to_modules_directory)(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
         const response = await octokit.issues.createComment({
