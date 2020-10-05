@@ -11,7 +11,8 @@ const current_path = "";// the checked out directory path the action is called f
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
 const buildActivityReport = (install, update, uninstall) => {
-  
+  const action_url = "https://github.com/marketplace/activity/npm-worker"
+  const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
   const buildList = title => items => items.length > 0
     ? items.reduce((list, item) => list += `- ${item}\n`, `**${title}**\n`) + `\n`
     : "";
@@ -31,20 +32,20 @@ const buildActivityReport = (install, update, uninstall) => {
                          .map((item, index, array) => array.length > 1 && index === array.length - 1 ? `and ${item}` : item)
                         ).join(", ");
     
-    return `An update to your configuration file requested the action ${opperations}.\n\n`;
+    return `An update to your configuration file requested [\`NPM Worker\`](${action_url}) ${opperations}.\n\n`;
   }
   
   const sender = github.context.payload.sender;
   const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
   const commit = `Triggered by commit ${github.context.sha}`;
-  // <a href="https://github.com/marketplace/activity/npm-worker"><img src="https://github.com" width="21"/> NPM Worker</a>
+  const icon = `<a href="${action_url}"><img src="${icon_url}"/></a>`;
   const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
   const description = buildDescription();
   const installed = buildList("Installed")(install)
   const updated = buildList("Updated")(update)
   const uninstalled = buildList("Uninstalled")(uninstall);
   
-  const report = `> ${requester}\n${commit}\n\n${branding} ${description}\n\n${installed}${updated}${uninstalled}`;
+  const report = `> ${icon}\n${requester}\n${commit}\n\n ${description}\n\n${installed}${updated}${uninstalled}`;
   return report;
 }
 
