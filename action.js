@@ -112,6 +112,7 @@ const getWorkerConfigPath = workflow => {
     console.log("pre EXECA.COMMAND");
     const subprocess = await execa('echo', ['foo']).stdout.pipe(await fs.createWriteStream(`${node_modules_path}/stdout.txt`))
     console.log(subprocess);
+    return;
     if (!has_package_json) await execa.command(`cd ${node_modules_path} && npm init -y`);
     console.log("Post EXECA.COMMAND")
     console.log("PATHS", valid_node_modules_path, has_package_json);
