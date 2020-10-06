@@ -1,0 +1,31 @@
+{
+  "name": "npm-worker",
+  "version": "1.0.0",
+  "description": "[action-badge]: https://img.shields.io/badge/-Action-24292e?logo=github&style=for-the-badge [paypal-badge]: https://img.shields.io/badge/-Support-f3f4f6?logo=paypal&style=for-the-badge [brave-badge]: https://img.shields.io/badge/-Tip-f3f4f6?logo=brave&style=for-the-badge",
+  "main": "action.js",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "execa": "^4.0.3",
+    "js-yaml": "^3.14.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mudlabs/npm-worker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mudlabs/npm-worker/issues"
+  },
+  "homepage": "https://github.com/mudlabs/npm-worker#readme",
+  "directories": {
+    "test": "test"
+  }
+}
+
