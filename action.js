@@ -92,7 +92,7 @@ const initJSON = async path => {
     const stream = await execa.command('npm init -y').stdout.pipe(
       await fs.createWriteStream(file_path)
     );
-    const file = await fs.promises.readFile(file_path);
+    const file = await fs.promises.readFile(file_path, {encoding: "utf-8");
     console.log(typeof file, file);
     return;
   } catch (error) {
