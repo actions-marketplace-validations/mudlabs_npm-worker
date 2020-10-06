@@ -3,7 +3,7 @@ name: NPM Worker
 on:
   push:
     paths-ignore: 
-      - test
+      - test/
     
 env:
   token: ${{ secrets.GITHUB_TOKEN }}
