@@ -132,7 +132,7 @@ const initJSON = async path => {
     console.log("REPORT", activity_to_report);
     
     if (activity_to_report) {
-      const activity = buildActivityReport(!has_package_json)(path_to_modules_directory)(installed, updated, uninstalled);
+      const activity = buildActivityReport(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
         const response = await octokit.issues.createComment({
