@@ -1,0 +1,4 @@
+path: ./
+install:
+  - unirest
+  - cardinal-direction
