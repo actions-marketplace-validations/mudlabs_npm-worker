@@ -12,7 +12,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const buildList = title => items => items.length > 0
     ? items.reduce((list, item) => {
       console.log(item);
-      const point `- ${item}\n`, `**${title}**\n`;
+      const point = `- ${item}\n`, `**${title}**\n`;
       console.log(point);
       return list += point;
     }) + `\n`
