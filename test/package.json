@@ -9,7 +9,6 @@
     "cardinal-direction": "^1.0.0",
     "execa": "^4.0.3",
     "js-yaml": "^3.14.0",
-    "node-fetch": "^2.6.1",
     "unirest": "^0.6.0"
   },
   "devDependencies": {},
