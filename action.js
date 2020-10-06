@@ -16,7 +16,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const buildDescription = () => {
     const numberOfPackages = items => {
       const number = items.length;
-      return `${number} package${number === 1} ? "" : "s"`;
+      return `${number} package${number === 1 ? "" : "s"}`;
     }
     const tag = title => items => items.length > 0 ? `_${title}_ ${numberOfPackages(items)}` : "";
     
