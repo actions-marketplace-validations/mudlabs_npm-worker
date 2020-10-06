@@ -4,10 +4,6 @@ const yaml = require("js-yaml");
 const core = require("@actions/core");
 const github = require("@actions/github");
 
-
-const current_path = github.workspace;// the checked out directory path the action is called from;
-console.log(current_path);
-
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
 const buildActivityReport = (install, update, uninstall) => {
@@ -59,6 +55,7 @@ const cleanConfigurationFile = path => async data => {
 };
 
 const shell = command => async packages => {
+  console.log("SHELL", command);
   const activity = await Promise.all(packages.map(async package => {
       try {
         // instead of changing the directory path to node_modules and package befor running the worker command,
@@ -99,12 +96,13 @@ const getWorkerConfigPath = workflow => {
       { owner: github.context.payload.sender.login, repo: github.context.payload.repository.name }
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow)[0];
-    console.log("WORKFLOW", workflow);
     const worker_config_path = getWorkerConfigPath(workflow);
     if (!worker_config_path) return core.setFailed("Could not locate the 'npmworker.config.yaml' file.");
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
+    
+    console.log("DATA", data);
     
     // Should be relative to current_path
     const node_modules_path = data.path || "./";
@@ -112,14 +110,18 @@ const getWorkerConfigPath = workflow => {
     const has_package_json = await fs.exists(`${node_modules_path}/package.json`);
     if (!valid_node_modules_path) return core.setFailed(`The path for node_modules does not exist.`);
     if (!has_package_json) await execa.command(`cd ${node_modules_path} && npm init -y`);
+   
+    console.log("PATHS", valid_node_modules_path, has_package_json);
     
     // run the requested shell commands
     const installed = await shell("install")(data.install);
     const updated = await shell("update")(data.update);
     const uninstalled = await shell("uninstall")(data.uninstall);
-    const activityToReport = installed.concat(updated, uninstalled).length > 0;
-        
-    if (activityToReport) {
+    const activity_to_report = installed.concat(updated, uninstalled).length > 0;
+    
+    console.log("REPORT", activity_to_report);
+    
+    if (activity_to_report) {
       const activity = buildActivityReport(!has_package_json)(path_to_modules_directory)(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
