@@ -6,7 +6,7 @@ const github = require("@actions/github");
 
 
 const current_path = github.context.workspace;// the checked out directory path the action is called from;
-console.log(current_path);
+console.log(current_path, github.context);
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
@@ -96,7 +96,7 @@ const getWorkerConfigPath = workflow => {
     
     const workflows = await octokit.request(
       'GET /repos/:owner/:repo/actions/workflows', 
-      { owner: github.context.actor, repo: github.context.repository.name }
+      { owner: github.context.payload.actor, repo: github.context.payload.repository.name }
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow);
     const worker_config_path = getWorkerConfigPath(workflow);
