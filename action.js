@@ -5,7 +5,7 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 
 
-const current_path = github.context.payload.workspace;// the checked out directory path the action is called from;
+const current_path = github.workspace;// the checked out directory path the action is called from;
 console.log(current_path);
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
@@ -96,9 +96,10 @@ const getWorkerConfigPath = workflow => {
     
     const workflows = await octokit.request(
       'GET /repos/:owner/:repo/actions/workflows', 
-      { owner: github.context.payload.actor, repo: github.context.payload.repository.name }
+      { owner: github.context.payload.sender.login, repo: github.context.payload.repository.name }
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow);
+    console.log("WORKFLOW", workflow);
     const worker_config_path = getWorkerConfigPath(workflow);
     if (!worker_config_path) return core.setFailed("Could not locate the 'npmworker.config.yaml' file.");
     
