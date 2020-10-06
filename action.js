@@ -88,9 +88,12 @@ const getWorkerConfigPath = workflow => {
 
 const initJSON = async path => {
   try {
-    const json_file = await execa.command('npm init -y').stdout.pipe(
-      await fs.createWriteStream(`${path}/package.json`)
+    const file_path = `${path}package.json`;
+    const stream = await execa.command('npm init -y').stdout.pipe(
+      await fs.createWriteStream(file_path)
     );
+    const file = await fs.promises.readFile(file_path);
+    await fs.promises.writeFile(file_path, file.replace(/^(.)+\{/, ""))
     console.log(json_file);
     return;
   } catch (error) {
