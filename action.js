@@ -90,7 +90,12 @@ const initJSON = async path => {
   try {
     const file_path = `${path}/package.json`;
     const writeStream = fs.createWriteStream(file_path);
+    await execa.command("mkdir temp");
     const {stdout} = await execa.command('npm init -y');
+    
+    let context = stdout.replace(/^(.)+\{/, "");
+    
+    await fs.promises.writeFile(file_path, context);
     
     console.log(stdout, stdout.pipe)
     return;
