@@ -106,7 +106,7 @@ const getWorkerConfigPath = workflow => {
     
     // Should be relative to current_path
     const node_modules_path = data.path || "./";
-    const valid_node_modules_path = await fs.exists(node_modules_path);
+    const valid_node_modules_path = fs.existsSync(node_modules_path);
     console.log("valid_node_modules_path",valid_node_modules_path);
     const has_package_json = await fs.exists(`${node_modules_path}/package.json`);
     console.log("has_package_json",has_package_json);
