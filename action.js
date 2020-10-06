@@ -56,6 +56,7 @@ const cleanConfigurationFile = path => async data => {
 
 const shell = command => async packages => {
   console.log("SHELL", command);
+  if (!(packages instanceof Array)) return [];
   const activity = await Promise.all(packages.map(async package => {
       try {
         // instead of changing the directory path to node_modules and package befor running the worker command,
