@@ -54,14 +54,14 @@ const cleanConfigurationFile = path => async data => {
   }
 };
 
-const shell = command => async packages => {
+const shell = command => packages => async path => {
   console.log("SHELL", command);
   if (!(packages instanceof Array)) return [];
   const activity = await Promise.all(packages.map(async package => {
       try {
         // instead of changing the directory path to node_modules and package befor running the worker command,
         // can we pass this into the one execa call?
-        const output = await execa(`npm ${command} --prefix ${node_modules_path} ${package_json_path}`, [package]);
+        const output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
         return output;
       } catch (error) {
         return error;
@@ -124,9 +124,9 @@ const initJSON = async path => {
     if (!has_package_json) await initJSON(node_modules_path);  
     
     // run the requested shell commands
-    const installed = await shell("install")(data.install);
-    const updated = await shell("update")(data.update);
-    const uninstalled = await shell("uninstall")(data.uninstall);
+    const installed = await shell("install")(data.install)(node_modules_path);
+    const updated = await shell("update")(data.update)(node_modules_path);
+    const uninstalled = await shell("uninstall")(data.uninstall)(node_modules_path);
     const activity_to_report = installed.concat(updated, uninstalled).length > 0;
     
     console.log("REPORT", activity_to_report);
