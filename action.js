@@ -93,8 +93,7 @@ const initJSON = async path => {
       await fs.createWriteStream(file_path)
     );
     const file = await fs.promises.readFile(file_path);
-    await fs.promises.writeFile(file_path, file.replace(/^(.)+\{/, ""))
-    console.log(json_file);
+    console.log(typeof file, file);
     return;
   } catch (error) {
     throw error;
