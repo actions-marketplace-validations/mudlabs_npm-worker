@@ -135,11 +135,11 @@ const initJSON = async path => {
       const activity = buildActivityReport(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
-        console.log(github.context.payload.repository, github.context.payload.repository.name, data.issue, activity)
+        console.log(github.context.payload.repository.owner.login, github.context.payload.repository.name, data.issue, activity)
         const response = await octokit.issues.createComment({
-          owner: "mudlabs",
-          repo: "npm-worker",
-          issue_number: 2,
+          owner: github.context.payload.repository.owner.login,
+          repo: github.context.payload.repository.name,
+          issue_number: data.issue,
           body: "Hello World"
         });
       }
