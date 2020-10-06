@@ -3,6 +3,6 @@ issue: 2
 path: ./test/
 install:
   - cardinal-direction
-  - @mudlabs/fake-package
+  - "@mudlabs/fake-package"
 uninstall:
   - unirest
