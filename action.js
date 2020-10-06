@@ -96,7 +96,7 @@ const getWorkerConfigPath = workflow => {
     
     const workflows = await octokit.request(
       'GET /repos/:owner/:repo/actions/workflows', 
-      { owner, repo }
+      { owner: github.context.actor, repo: github.context.repository.name }
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow);
     const worker_config_path = getWorkerConfigPath(workflow);
