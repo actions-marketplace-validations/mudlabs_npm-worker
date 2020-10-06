@@ -75,7 +75,7 @@ const shell = command => async packages => {
 const getWorkerConfigPath = workflow => {
   const config_name = "npmworker.config.yaml"
   const input_config = core.getInput("config");
-  const workflow_dir_path = workflow.path.substring(0, workflow.lastIndexOf("/"));
+  const workflow_dir_path = workflow.path.substring(0, workflow.path.lastIndexOf("/"));
   const workflow_config = `${workflow_dir_path}/${config_name}`;
   const github_config = `.github/${config_name}`;
   const root_config = `./${config_name}`;
