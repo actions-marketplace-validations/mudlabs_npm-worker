@@ -110,13 +110,8 @@ const getWorkerConfigPath = workflow => {
     const has_package_json = fs.existsSync(`${node_modules_path}/package.json`);
 
     if (!valid_node_modules_path) return core.setFailed(`The path for node_modules does not exist.`);
-    if (!has_package_json) await execa.command('npm init -y').stdout.pipe((r) => console.log(r));
-//     await fs.createWriteStream(`${node_modules_path}/package.json`));
-    
+    if (!has_package_json) await execa.command('npm init -y').stdout.pipe(await fs.createWriteStream(`${node_modules_path}/package.json`));    
     return;
-    if (!has_package_json) await execa.command(`cd ${node_modules_path} && npm init -y`);
-    console.log("Post EXECA.COMMAND")
-    console.log("PATHS", valid_node_modules_path, has_package_json);
     
     // run the requested shell commands
     const installed = await shell("install")(data.install);
