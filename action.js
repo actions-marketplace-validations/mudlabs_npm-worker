@@ -98,7 +98,7 @@ const getWorkerConfigPath = workflow => {
       'GET /repos/:owner/:repo/actions/workflows', 
       { owner: github.context.payload.sender.login, repo: github.context.payload.repository.name }
     );
-    const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow);
+    const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow)[0];
     console.log("WORKFLOW", workflow);
     const worker_config_path = getWorkerConfigPath(workflow);
     if (!worker_config_path) return core.setFailed("Could not locate the 'npmworker.config.yaml' file.");
