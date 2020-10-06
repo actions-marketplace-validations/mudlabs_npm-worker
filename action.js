@@ -90,7 +90,7 @@ const initJSON = async path => {
   try {
     const file_path = `${path}/package.json`;
     const writeStream = fs.createWriteStream(file_path);
-    writeStream.on("write", function(w) { console.log("WRITE", w); });
+    writeStream.on("write", function(w) { console.log("WRITE", w.toString()); });
     writeStream.on("data", function(d) { console.log("DATA", d); });
     
     await execa.command('npm init -y').stdout.pipe(writeStream);
