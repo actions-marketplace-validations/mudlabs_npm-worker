@@ -113,9 +113,7 @@ const initJSON = async path => {
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
-    
-    console.log("DATA", data);
-    
+        
     // Should be relative to current_path
     const node_modules_path = data.path || "./";
     const valid_node_modules_path = fs.existsSync(node_modules_path);
@@ -123,7 +121,6 @@ const initJSON = async path => {
 
     if (!valid_node_modules_path) return core.setFailed(`The path for node_modules does not exist.`);
     if (!has_package_json) await initJSON(node_modules_path);  
-    return;
     
     // run the requested shell commands
     const installed = await shell("install")(data.install);
