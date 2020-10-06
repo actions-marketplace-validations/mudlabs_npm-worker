@@ -14,11 +14,15 @@ Manage node packages on your Github action repository.
 - [Usage](#usage)
 - [Notes](#notes)
 
+---
+
 ## Requirements
 
 | Requirement | Description |
 | :--- | :--- |
 | `npmworker.config.yaml` | You must include a YAML configuration file in your repository. The action first looks for this file in the directory of the `workflow` that triggered it, then in `.github`, and finally in root _(`./`)_. |
+
+---
 
 ## Usage
 
@@ -80,6 +84,7 @@ uninstall:
 | :--- | :--- |
 | `activity` | A markdown flavourd description of the activity performed by the action. If `issue` is set as `true` in the configuration file, this is the comment sent to that issue. |
 
+---
     
 ## Notes
 - If no `package.json` file is located at `path`, the action will create one using `npm init -y`.
