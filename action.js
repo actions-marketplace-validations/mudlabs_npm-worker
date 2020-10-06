@@ -11,8 +11,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
   const buildList = title => items => items.length > 0
     ? items.reduce((list, item) => {
-      console.log(item);
-      const point = `- ${item}\n`;
+      const point = `- ${item.failed ? item.shortMessage : item.stdout}\n`;
       console.log(point);
       return list += point;
     }, `**${title}**\n`) + `\n`
