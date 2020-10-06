@@ -8,6 +8,9 @@ inputs:
   token:
     description: GITHUB_TOKEN or a PAT for the repository
     default: ${{ github.token }}
+  config:
+    description: A path to the configuration file for the worker
+    required: false
 outputs:
   activity:
     description: Describes the activity perfomed by the action.
