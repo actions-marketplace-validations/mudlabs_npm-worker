@@ -10,7 +10,12 @@ const buildActivityReport = (install, update, uninstall) => {
   const action_url = "https://github.com/marketplace/activity/npm-worker"
   const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
   const buildList = title => items => items.length > 0
-    ? items.reduce((list, item) => list += `- ${item}\n`, `**${title}**\n`) + `\n`
+    ? items.reduce((list, item) => {
+      console.log(item);
+      const point `- ${item}\n`, `**${title}**\n`;
+      console.log(point);
+      return list += point;
+    }) + `\n`
     : "";
   
   const buildDescription = () => {
@@ -57,7 +62,6 @@ const cleanConfigurationFile = path => async data => {
 };
 
 const shell = command => packages => async path => {
-  console.log("SHELL", command);
   if (!(packages instanceof Array)) return [];
   const activity = await Promise.all(packages.map(async package => {
       try {
