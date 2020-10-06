@@ -1,4 +1,5 @@
 clean: true
+issue: 1
 path: ./test/
 install:
   - unirest
