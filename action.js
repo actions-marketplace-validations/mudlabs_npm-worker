@@ -107,11 +107,10 @@ const getWorkerConfigPath = workflow => {
     // Should be relative to current_path
     const node_modules_path = data.path || "./";
     const valid_node_modules_path = fs.existsSync(node_modules_path);
-    console.log("valid_node_modules_path",valid_node_modules_path);
     const has_package_json = fs.existsSync(`${node_modules_path}/package.json`);
-    console.log("has_package_json",has_package_json);
     if (!valid_node_modules_path) return core.setFailed(`The path for node_modules does not exist.`);
     console.log("pre EXECA.COMMAND");
+    await execa.command("echo cwd");
     if (!has_package_json) await execa.command(`cd ${node_modules_path} && npm init -y`);
     console.log("Post EXECA.COMMAND")
     console.log("PATHS", valid_node_modules_path, has_package_json);
