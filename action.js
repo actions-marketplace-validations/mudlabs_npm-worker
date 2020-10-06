@@ -41,6 +41,8 @@ const buildActivityReport = (install, update, uninstall) => {
   const updated = buildList("Updated")(update)
   const uninstalled = buildList("Uninstalled")(uninstall);
   
+  console.log(installed, typeof installed)
+    
   const report = `> ${icon}\n${requester}\n${commit}\n\n ${description}\n\n${installed}${updated}${uninstalled}`;
   return report;
 }
