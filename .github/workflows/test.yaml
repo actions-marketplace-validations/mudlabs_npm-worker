@@ -3,7 +3,7 @@ name: Test Worker
 on:
   push:
     paths:
-      - ./test/**
+      - ./test/npmworker.config.yaml
    
 jobs:
   test:
