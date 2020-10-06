@@ -11,8 +11,8 @@ const buildActivityReport = (install, update, uninstall) => {
   const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
   const buildList = title => items => items.length > 0
     ? items.reduce((list, item) => {
+      console.log(item);
       const point = `- ${item.failed ? item.shortMessage : item.stdout}\n`;
-      console.log(point);
       return list += point;
     }, `**${title}**\n`) + `\n`
     : "";
@@ -140,13 +140,12 @@ const initJSON = async path => {
       const activity = buildActivityReport(installed, updated, uninstalled);
       core.setOutput(activity);
       if (data.issue) {
-        console.log(github.context.payload.repository.owner.login, github.context.payload.repository.name, data.issue, typeof activity)
-        const response = await octokit.issues.createComment({
-          owner: github.context.payload.repository.owner.login,
-          repo: github.context.payload.repository.name,
-          issue_number: data.issue,
-          body: activity
-        });
+//         const response = await octokit.issues.createComment({
+//           owner: github.context.payload.repository.owner.login,
+//           repo: github.context.payload.repository.name,
+//           issue_number: data.issue,
+//           body: activity
+//         });
       }
     }
     
