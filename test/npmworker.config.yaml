@@ -2,9 +2,8 @@ clean: true
 issue: 2
 path: ./test/
 install:
-  - cardinal-direction
-uninstall:
   - unirest
+  - cardinal-direction
   
   
   
