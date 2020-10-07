@@ -4,7 +4,7 @@ path: ./test/
 install:
   - cardinal-direction
   - "@mudlabs/fake-package"
-  - "node-fetch@2.0.0"
+  - "unirest"
 update:
   - node-fetch
   - cardinal-direction
