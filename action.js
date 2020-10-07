@@ -116,8 +116,8 @@ const shell = command => packages => async path => {
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
         console.log("SHELL ERROR:",error)
-        if (command === "uninstall" && error.command.startsWith("npm ls") && error.stderr.endsWith("(empty)\n")) {
-          error.stderr = "The package was not _uninstalled_ because it is not _installed_"
+        if (command === "uninstall" && error.command.startsWith("npm ls") && error.stdout.endsWith("(empty)\n")) {
+          error["stderr"] = "The package was not _uninstalled_ because it is not _installed_";
         }
         output = error;
       } finally {
