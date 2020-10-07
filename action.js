@@ -29,9 +29,9 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUpdatedItem = item => {
     console.log(item)
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n`
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr}`
     } else {
-      return `- ![success] \`${item.package}\`\n`
+      return `- ![success] \`${item.package}\`\n  > ${item.stdout}`
     }
   };
   
@@ -113,17 +113,26 @@ const cleanConfigurationFile = path => async data => {
   }
 };
 
+const hasPackageInstalled = async (path, package) => {
+  try {
+    await execa.command(`npm ls --prefix ${path} ${package}`)
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 const shell = command => packages => async path => {
   if (!(packages instanceof Array)) return [];
   const activity = await Promise.all(packages.map(async package => {
       let output;
       try {
-        if (command === "uninstall") await execa.command(`npm ls --prefix ${path} ${package}`);
+        if (command === "update" || command === "uninstall") {
+          const has_package = await hasPackageInstalled(path, package);
+          if (!has_package) throw { stderr: `The package was not _${command}ed_ because it is not _installed_` };
+        }
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
-        if (command === "uninstall" && error.command.startsWith("npm ls") && error.stdout.endsWith("(empty)\n")) {
-          error["stderr"] = "The package was not _uninstalled_ because it is not _installed_";
-        }
         output = error;
       } finally {
         output["package"] = package
