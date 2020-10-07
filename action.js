@@ -54,6 +54,7 @@ const buildActivityReport = (install, update, uninstall) => {
       }
       return list += listItem;
     }, `### ${title}`) + `\n`;
+    return list;
   };
   
 //   const buildList = title => items => items.length > 0
