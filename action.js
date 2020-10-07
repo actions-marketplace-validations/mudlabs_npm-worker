@@ -131,15 +131,13 @@ const shell = command => packages => async path => {
   const activity = await Promise.all(packages.map(async package => {
       let output;
       try {
-        if (command === "update" || command === "uninstall") {
-          const has_package = await hasPackageInstalled(path, package);
-          if (!has_package && command === "uninstall") throw { stderr: "The package could not be _uninstalled_, as it is not _installed_." };
-          if (command === "update") {
-            output =  await execa.command(`npm ${!has_package ? "install" : command} --prefix ${path} ${package}`);
-            if (output.stdout === "" && has_package) output = await execa.command(`npm install --prefix ${path} ${package}`);
-          }
+        const has_package = await hasPackageInstalled(path, package);
+        if (command !== "update") {
+          output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
+        } else {
+          output = await execa.command(`npm ${!has_package ? "install" : "update"} --prefix ${path} ${package}`);
+          if (output.stdout === "" && has_package) output = await execa.command(`npm install --prefix ${path} ${package}`);
         }
-        if (command !== "update") output = await execa.command(`npm ${command} --prefix ${path} ${package}`)
       } catch (error) {
         error["failed"] = true;
         output = error;
