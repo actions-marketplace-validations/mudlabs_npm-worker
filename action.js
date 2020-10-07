@@ -33,6 +33,7 @@ const buildActivityReport = (install, update, uninstall) => {
 //       return `- ![failed] \`\`\n  >
 //     } else {
 //     }
+    console.log(item)
     return item;
     return item.failed
       ? item
