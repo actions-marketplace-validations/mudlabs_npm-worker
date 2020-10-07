@@ -8,7 +8,7 @@ install:
 update:
 uninstall:
   - unirest
-  - "@mudlabs/fake-package"
+  - "@mudlabs/package-this-is-not-real"
 
 
 
