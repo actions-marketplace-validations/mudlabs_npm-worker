@@ -8,7 +8,7 @@ const github = require("@actions/github");
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
 Array.prototype.drop = function(start, end = this.length - start) { 
-  this.splice(start,stop);
+  this.splice(start, end);
   return this; 
 }
 
