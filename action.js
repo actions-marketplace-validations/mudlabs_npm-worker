@@ -13,10 +13,6 @@ Array.prototype.drop = function(start, end = this.length - start) {
 }
 
 const buildActivityReport = (install, update, uninstall) => {
-//   const action_url = "https://github.com/marketplace/activity/npm-worker"
-//   const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
-//   const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
-//   const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
   
   const setInstalledItem = item => {
     if (item.failed) {
@@ -33,6 +29,11 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUpdatedItem = item => {};
   
   const setUninstalledItem = item => {
+//     if (item.failed) {
+//       return `- ![failed] \`\`\n  >
+//     } else {
+//     }
+    return item;
     return item.failed
       ? item
       : `- ![${success}] \`${item.package}\`\n${
@@ -63,14 +64,6 @@ const buildActivityReport = (install, update, uninstall) => {
     }, `### ${title}\n`) + `\n`;
     return list;
   };
-  
-//   const buildList = title => items => items.length > 0
-//     ? items.reduce((list, item) => {
-//       console.log(item);
-//       const point = `- ${item.failed ? item.shortMessage : item.stdout}\n`;
-//       return list += point;
-//     }, `**${title}**\n`) + `\n`
-//     : "";
   
   const buildDescription = () => {
     const numberOfPackages = items => {
