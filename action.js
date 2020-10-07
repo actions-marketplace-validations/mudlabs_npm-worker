@@ -16,7 +16,8 @@ const buildActivityReport = (install, update, uninstall) => {
   
   const setInstalledItem = item => {
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stdout.split("\n").filter(value => value !== "").join("\n")}`;
+      console.log(item.stdout)
+      return `- ![failed] \`${item.package}\`\n  > ${item.stdout.split("\n")[0]}\n  > ${item.shortMessage}\n`;
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
@@ -132,9 +133,9 @@ const shell = command => packages => async path => {
       let output;
       try {
         const has_package = await hasPackageInstalled(path, package);
-        if (command !== "update") output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
-        if (command === "uninstall" && !has_package) output.stdout += "Package does not appear to have been _installed_."
-        if (command === "update") {
+        if (command !== "update") { 
+          output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
+        } else {
           output = await execa.command(`npm ${!has_package ? "install" : "update"} --prefix ${path} ${package}`);
           if (output.stdout === "" && has_package) output = await execa.command(`npm install --prefix ${path} ${package}`);
         }
