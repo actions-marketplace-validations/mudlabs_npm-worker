@@ -13,4 +13,5 @@ uninstall:
   - unirest
   - "@mudlabs/package-this-is-not-real"
   - node-fetch
+  - short-scale-units
  
