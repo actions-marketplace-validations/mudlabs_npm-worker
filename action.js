@@ -26,10 +26,11 @@ const buildActivityReport = (install, update, uninstall) => {
     }
   }
   
-  const setUpdatedItem = item => {};
+  const setUpdatedItem = item => {
+    return item
+  };
   
   const setUninstalledItem = item => {
-    console.log(item)
     if (item.failed) {
       return `- ![failed] \`${item.package}\`\n  > ${item.stderr}`;
     } else {
@@ -115,7 +116,6 @@ const shell = command => packages => async path => {
         if (command === "uninstall") await execa.command(`npm ls --prefix ${path} ${package}`);
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
-        console.log("SHELL ERROR:",error)
         if (command === "uninstall" && error.command.startsWith("npm ls") && error.stdout.endsWith("(empty)\n")) {
           error["stderr"] = "The package was not _uninstalled_ because it is not _installed_";
         }
