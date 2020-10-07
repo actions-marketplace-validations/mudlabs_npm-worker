@@ -17,7 +17,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const setInstalledItem = item => {
     if (item.failed) {
       console.log(item.stdout)
-      return `- ![failed] \`${item.package}\`\n  > ${item.stdout.split("\n")[0]}\n  > ${item.shortMessage}\n`;
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}\n`;
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
@@ -30,7 +30,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUpdatedItem = item => {
     console.log(item)
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}`
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}\n`
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
@@ -42,13 +42,16 @@ const buildActivityReport = (install, update, uninstall) => {
   
   const setUninstalledItem = item => {
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr}`;
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}\n`;
     } else {
       const package_state = `- ![success] \`${item.package}\`\n`;
       return package_state + item.stdout.split("\n")
         .filter(value => value !== "")
         .drop(1,2)
-        .map(value => `  > ${value}`)
+        .map((value, index) => index === 0 && value.startsWith("audited") 
+             ? `  > Package does not seem to have been _installed_.\n  > ${value}` 
+             : `  > ${value}`
+        })
         .join("\n")
     }
   };
