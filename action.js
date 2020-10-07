@@ -111,7 +111,7 @@ const shell = command => packages => async path => {
   const activity = await Promise.all(packages.map(async package => {
       let output;
       try {
-        const output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
+        output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
         output = error;
       } finally {
