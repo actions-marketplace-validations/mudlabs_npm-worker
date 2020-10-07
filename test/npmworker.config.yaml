@@ -4,7 +4,7 @@ path: ./test/
 install:
   - cardinal-direction
   - "@mudlabs/fake-package"
+  - "unirest --saveDev"
 update:
-  - node-fetch
 uninstall:
   - unirest
