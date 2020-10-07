@@ -51,7 +51,7 @@ const buildActivityReport = (install, update, uninstall) => {
         .map((value, index) => index === 0 && value.startsWith("audited") 
              ? `  > Package does not seem to have been _installed_.\n  > ${value}` 
              : `  > ${value}`
-        })
+            )
         .join("\n")
     }
   };
