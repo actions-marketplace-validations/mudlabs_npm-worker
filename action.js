@@ -185,6 +185,7 @@ const initJSON = async path => {
     
     if (activity_to_report) {
       const activity = buildActivityReport(installed, updated, uninstalled);
+      console.log(activity)
       core.setOutput(activity);
       if (data.issue) {
 //         const response = await octokit.issues.createComment({
