@@ -31,7 +31,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUninstalledItem = item => {
     console.log(item)
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  >`;
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr}`;
     } else {
       const package_state = `- ![success] \`${item.package}\`\n`;
       return package_state + item.stdout.split("\n")
