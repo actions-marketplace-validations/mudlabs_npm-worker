@@ -133,12 +133,13 @@ const shell = command => packages => async path => {
       try {
         if (command === "update" || command === "uninstall") {
           const has_package = await hasPackageInstalled(path, package);
-          if (!has_package) throw { stderr: `The package was not _${command}ed_ because it is not _installed_` };
+          if (!has_package && command === "uninstall") throw { stderr: "The package could not be _uninstalled_, as it is not _installed_." };
+          if (command === "update") {
+            output =  await execa.command(`npm ${!has_package ? "install" : command} --prefix ${path} ${package}`);
+            if (output.stdout === "" && has_package) output = await execa.command(`npm install --prefix ${path} ${package}`);
+          }
         }
-        output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
-        if (command === "update" && output.stdout === "") {
-          output = await execa.command(`npm install --prefix ${path} ${package}`);
-        }
+        if (command !== "update") output = await execa.command(`npm ${command} --prefix ${path} ${package}`)
       } catch (error) {
         error["failed"] = true;
         output = error;
