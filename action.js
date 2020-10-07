@@ -112,13 +112,13 @@ const shell = command => packages => async path => {
   const activity = await Promise.all(packages.map(async package => {
       let output;
       try {
-        if (command === "uninstall") {
-          const exists = await execa.command(`npm ls --prefix ${path} ${package}`);
-          console.log("CAN UNINSTALL:", exists)
-        }
+        if (command === "uninstall") await execa.command(`npm ls --prefix ${path} ${package}`);
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
         console.log("SHELL ERROR:",error)
+        if (command === "uninstall" && error.command.startsWith("npm ls") && error.stderr.endsWith("(empty)\n")) {
+          error.stderr = "The package was not _uninstalled_ because it is not _installed_"
+        }
         output = error;
       } finally {
         output["package"] = package
