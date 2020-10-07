@@ -34,7 +34,7 @@ const buildActivityReport = (install, update, uninstall) => {
       return item.stdout.split("\n")
         .filter(value => value !== "")
         .drop(2,2)
-        .map(value => valueStartsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![success] \`$2\``) : `  > ${value}`)
+        .map(value => value.startsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![success] \`$2\``) : `  > ${value}`)
         .join("\n");
     }
   };
