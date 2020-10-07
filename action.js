@@ -112,11 +112,7 @@ const shell = command => packages => async path => {
   const activity = await Promise.all(packages.map(async package => {
       let output;
       try {
-        if (command == "uninstall") {
-          await execa.command(`npm config ls set json`);
-        const have = await execa.command(`npm ls --prefix ${path} ${package}`);
-        console.log("PACKAGE INSTALLED?:", have);
-        }
+        if (command === "uninstall") await execa.command(`npm ls --prefix ${path}`);
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
         console.log("SHELL ERROR:",error)
