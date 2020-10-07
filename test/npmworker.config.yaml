@@ -6,9 +6,13 @@ install:
   - "@mudlabs/fake-package"
   - "unirest --saveDev"
 update:
+  - node-fetch
+  - cardinal-direction
+  - "@mudlabs/fake-package"
 uninstall:
   - unirest
   - "@mudlabs/package-this-is-not-real"
+  - node-fetch
 
 
 
