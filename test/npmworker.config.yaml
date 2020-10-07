@@ -11,7 +11,7 @@ update:
   - "@mudlabs/fake-package"
 uninstall:
   - unirest
-  - "@mudlabs/package-this-is-not-real"
+  - "@mudlabs/fake-package"
   - node-fetch
   - short-scale-units
  
