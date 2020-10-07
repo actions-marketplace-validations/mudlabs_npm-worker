@@ -113,7 +113,7 @@ const shell = command => packages => async path => {
       let output;
       try {
         if (command === "uninstall") {
-          const exists = await execa.command(`npm ls --prefix ${path}`);
+          const exists = await execa.command(`npm ls --prefix ${path} ${package}`);
           console.log("CAN UNINSTALL:", exists)
         }
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
