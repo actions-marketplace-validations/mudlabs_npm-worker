@@ -3,19 +3,66 @@ const execa = require("execa");
 const yaml = require("js-yaml");
 const core = require("@actions/core");
 const github = require("@actions/github");
+// const report = require("report");
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
 const buildActivityReport = (install, update, uninstall) => {
   const action_url = "https://github.com/marketplace/activity/npm-worker"
   const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
-  const buildList = title => items => items.length > 0
-    ? items.reduce((list, item) => {
-      console.log(item);
-      const point = `- ${item.failed ? item.shortMessage : item.stdout}\n`;
-      return list += point;
-    }, `**${title}**\n`) + `\n`
-    : "";
+  const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
+  const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
+  
+  const setInstalledItem = item => {
+    return item.failed
+      ? `- ![${failed}] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}`
+      : item.stdout.split("\n")
+        .filter(value => value !== "")
+        .splice(2,2)
+        .map(value => value.startsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![${success}] \`$2\``) : `  > ${value}`)
+        .join("\n");
+  }
+  
+  const setUpdatedItem = item => {};
+  
+  const setUninstalledItem = item => {
+    return item.failed
+      ? item
+      : `- ![${success}] \`${item.package}\`\n${
+        item.stdout.split("\n")
+          .filter(value => value !== "")
+          .splice(1,2)
+          .map(value => `  > ${value}`)
+          .join("\n")
+      }`;
+  };
+  
+  const buildList = title => items => {
+    if (items.length < 1) return "";
+    const list = items.reduce((list, item) => {
+      let listItem;
+      switch (title) {
+        case "Installed":
+          listItem = setInstalledItem(item);
+          break;
+        case "Updated":
+          listItem = setUpdatedItem(item);
+          break;
+        case "Uninstalled":
+          listItem = setUninstalledItem(item);
+          break;
+      }
+      return list += listItem;
+    }, `### ${title}`) + `\n`;
+  };
+  
+//   const buildList = title => items => items.length > 0
+//     ? items.reduce((list, item) => {
+//       console.log(item);
+//       const point = `- ${item.failed ? item.shortMessage : item.stdout}\n`;
+//       return list += point;
+//     }, `**${title}**\n`) + `\n`
+//     : "";
   
   const buildDescription = () => {
     const numberOfPackages = items => {
@@ -36,10 +83,9 @@ const buildActivityReport = (install, update, uninstall) => {
   }
   
   const sender = github.context.payload.sender;
+  const icon = `<a href="${action_url}"><img src="${icon_url}"/></a>`;
   const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
   const commit = `Triggered by commit ${github.context.sha}`;
-  const icon = `<a href="${action_url}"><img src="${icon_url}"/></a>`;
-  const branding = "[NPM Worker](https://github.com/marketplace/activity/npm-worker)";
   const description = buildDescription();
   const installed = buildList("Installed")(install)
   const updated = buildList("Updated")(update)
@@ -47,7 +93,7 @@ const buildActivityReport = (install, update, uninstall) => {
   
   console.log(installed, typeof installed)
     
-  const report = `> ${icon}\n${requester}\n${commit}\n\n ${description}\n\n${installed}${updated}${uninstalled}`;
+  const report = `> ${icon}\n>${requester}\n>${commit}\n\n ${description}\n\n${installed}${updated}${uninstalled}\n\n${success}\n${failed}`;
   return report;
 }
 
@@ -63,14 +109,15 @@ const cleanConfigurationFile = path => async data => {
 const shell = command => packages => async path => {
   if (!(packages instanceof Array)) return [];
   const activity = await Promise.all(packages.map(async package => {
+      let output;
       try {
-        // instead of changing the directory path to node_modules and package befor running the worker command,
-        // can we pass this into the one execa call?
         const output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
-        return output;
       } catch (error) {
-        return error;
-      } 
+        output = error;
+      } finally {
+        output["package"] = package
+        return output;
+      }
   }));
   return activity;
 };
