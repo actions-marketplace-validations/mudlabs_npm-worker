@@ -29,7 +29,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUpdatedItem = item => {
     console.log(item)
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr}`
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}`
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
