@@ -7,6 +7,11 @@ const github = require("@actions/github");
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
+Array.prototype.drop = function(start, end = this.length - start) { 
+  this.splice(start,stop);
+  return this; 
+}
+
 const buildActivityReport = (install, update, uninstall) => {
 //   const action_url = "https://github.com/marketplace/activity/npm-worker"
 //   const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
@@ -41,7 +46,6 @@ const buildActivityReport = (install, update, uninstall) => {
   
   const buildList = title => items => {
     if (items.length < 1) return "";
-    items.drop = function(start,stop) { this.splice(start,stop); return this; }
     const list = items.reduce((list, item) => {
       let listItem;
       switch (title) {
