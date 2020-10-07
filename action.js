@@ -113,11 +113,13 @@ const shell = command => packages => async path => {
       let output;
       try {
         if (command == "uninstall") {
+          await execa.command(`npm config ls set json`);
         const have = await execa.command(`npm ls --prefix ${path} ${package}`);
         console.log("PACKAGE INSTALLED?:", have);
         }
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
+        console.log("SHELL ERROR:",error)
         output = error;
       } finally {
         output["package"] = package
