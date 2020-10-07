@@ -29,21 +29,17 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUpdatedItem = item => {};
   
   const setUninstalledItem = item => {
-//     if (item.failed) {
-//       return `- ![failed] \`\`\n  >
-//     } else {
-//     }
     console.log(item)
-    return item;
-    return item.failed
-      ? item
-      : `- ![${success}] \`${item.package}\`\n${
-        item.stdout.split("\n")
-          .filter(value => value !== "")
-          .splice(1,2)
-          .map(value => `  > ${value}`)
-          .join("\n")
-      }`;
+    if (item.failed) {
+      return `- ![failed] \`${item.package}\`\n  >`;
+    } else {
+      const package_state = `- ![success] \`${item.package}\`\n`;
+      return package_state + item.stdout.split("\n")
+        .filter(value => value !== "")
+        .drop(1,2)
+        .map(value => `  > ${value}`)
+        .join("\n")
+    }
   };
   
   const buildList = title => items => {
