@@ -133,6 +133,7 @@ const shell = command => packages => async path => {
         }
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
+        error["failed"] = true;
         output = error;
       } finally {
         output["package"] = package
