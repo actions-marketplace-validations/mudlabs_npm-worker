@@ -112,6 +112,10 @@ const shell = command => packages => async path => {
   const activity = await Promise.all(packages.map(async package => {
       let output;
       try {
+        if (command == "uninstall") {
+        const have = await execa.command(`npm list | grep ${package}`);
+        console.log("PACKAGE INSTALLED?:", have);
+        }
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
       } catch (error) {
         output = error;
