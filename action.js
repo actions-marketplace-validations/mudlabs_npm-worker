@@ -59,7 +59,7 @@ const buildActivityReport = (install, update, uninstall) => {
           listItem = setUninstalledItem(item);
           break;
       }
-      return list += listItem;
+      return list += `${listItem}\n`;
     }, `### ${title}\n`) + `\n`;
     return list;
   };
