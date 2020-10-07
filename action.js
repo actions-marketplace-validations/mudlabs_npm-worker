@@ -31,7 +31,11 @@ const buildActivityReport = (install, update, uninstall) => {
     if (item.failed) {
       return `- ![failed] \`${item.package}\`\n  > ${item.stderr}`
     } else {
-      return `- ![success] \`${item.package}\`\n  > ${item.stdout}`
+      return item.stdout.split("\n")
+        .filter(value => value !== "")
+        .drop(2,2)
+        .map(value => valueStartsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![success] \`$2\``) : `  > ${value}`)
+        .join("\n");
     }
   };
   
@@ -132,6 +136,9 @@ const shell = command => packages => async path => {
           if (!has_package) throw { stderr: `The package was not _${command}ed_ because it is not _installed_` };
         }
         output = await execa.command(`npm ${command} --prefix ${path} ${package}`);
+        if (command === "update" && output.stdout === "") {
+          output = await execa.command(`npm install --prefix ${path} ${package}`);
+        }
       } catch (error) {
         error["failed"] = true;
         output = error;
@@ -209,12 +216,12 @@ const initJSON = async path => {
       console.log(activity)
       core.setOutput(activity);
       if (data.issue) {
-//         const response = await octokit.issues.createComment({
-//           owner: github.context.payload.repository.owner.login,
-//           repo: github.context.payload.repository.name,
-//           issue_number: data.issue,
-//           body: activity
-//         });
+        const response = await octokit.issues.createComment({
+          owner: github.context.payload.repository.owner.login,
+          repo: github.context.payload.repository.name,
+          issue_number: data.issue,
+          body: activity
+        });
       }
     }
     
