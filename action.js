@@ -17,7 +17,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const setInstalledItem = item => {
     if (item.failed) {
       console.log(item.stdout)
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}\n`;
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}\n`;
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
@@ -30,7 +30,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUpdatedItem = item => {
     console.log(item)
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}\n`
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}\n`
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
@@ -42,7 +42,7 @@ const buildActivityReport = (install, update, uninstall) => {
   
   const setUninstalledItem = item => {
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}\n`;
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}\n`;
     } else {
       const package_state = `- ![success] \`${item.package}\`\n`;
       return package_state + item.stdout.split("\n")
@@ -98,6 +98,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const icon = "[icon]: https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
   const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
   const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
+  const passed = "[passed]: https://via.placeholder.com/15/e6c620/000000?text=+";
   const sender = github.context.payload.sender;
   const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
   const commit = `Triggered by commit ${github.context.sha}`;
