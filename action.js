@@ -17,10 +17,11 @@ const buildActivityReport = (install, update, uninstall) => {
     if (item.failed) {
       return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}`;
     } else {
-      const stdout = item.stdout.split("\n").filter(value => value !== "");
-      stdout.splice(2,2);
-      stdout.map(value => value.startsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![success] \`$2\``) : `  > ${value}`);
-      return stdout.join("\n");
+      return item.stdout.split("\n")
+        .filter(value => value !== "")
+        .drop(2,2)
+        .map(value => value.startsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![success] \`$2\``) : `  > ${value}`)
+        .join("\n");
     }
   }
   
@@ -40,6 +41,7 @@ const buildActivityReport = (install, update, uninstall) => {
   
   const buildList = title => items => {
     if (items.length < 1) return "";
+    items.drop = function(start,stop) { this.splice(start,stop); return this; }
     const list = items.reduce((list, item) => {
       let listItem;
       switch (title) {
@@ -54,7 +56,7 @@ const buildActivityReport = (install, update, uninstall) => {
           break;
       }
       return list += listItem;
-    }, `### ${title}`) + `\n`;
+    }, `### ${title}\n`) + `\n`;
     return list;
   };
   
