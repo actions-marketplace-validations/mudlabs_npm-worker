@@ -8,19 +8,20 @@ const github = require("@actions/github");
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
 const buildActivityReport = (install, update, uninstall) => {
-  const action_url = "https://github.com/marketplace/activity/npm-worker"
-  const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
-  const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
-  const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
+//   const action_url = "https://github.com/marketplace/activity/npm-worker"
+//   const icon_url = "https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
+//   const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
+//   const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
   
   const setInstalledItem = item => {
-    return item.failed
-      ? `- ![${failed}] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}`
-      : item.stdout.split("\n")
-        .filter(value => value !== "")
-        .splice(2,2)
-        .map(value => value.startsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![${success}] \`$2\``) : `  > ${value}`)
-        .join("\n");
+    if (item.failed) {
+      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n")[0]}\n  > ${item.shortMessage}`;
+    } else {
+      const stdout = item.stdout.split("\n").filter(value => value !== "");
+      stdout.splice(2,2);
+      stdout.map(value => value.startsWith("+ ") ? value.replace(/(\+ )(\S+)/, `- ![success] \`$2\``) : `  > ${value}`);
+      return stdout.join("\n");
+    }
   }
   
   const setUpdatedItem = item => {};
@@ -80,21 +81,24 @@ const buildActivityReport = (install, update, uninstall) => {
                          .map((item, index, array) => array.length > 1 && index === array.length - 1 ? `and ${item}` : item)
                         ).join(", ");
     
-    return `An update to your configuration file requested [\`NPM Worker\`](${action_url}) ${opperations}.\n\n`;
+    return `An update to your configuration file requested [NPM Worker][marketplace] ${opperations}.\n`;
   }
   
+  const marketplace = "[marketplace]: https://github.com/marketplace/activity/npm-worker";
+  const icon = "[icon]: https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
+  const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
+  const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
   const sender = github.context.payload.sender;
-  const icon = `<a href="${action_url}"><img src="${icon_url}"/></a>`;
   const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
   const commit = `Triggered by commit ${github.context.sha}`;
   const description = buildDescription();
   const installed = buildList("Installed")(install)
   const updated = buildList("Updated")(update)
   const uninstalled = buildList("Uninstalled")(uninstall);
-  
-  console.log(installed, typeof installed)
-    
-  const report = `> ${icon}\n>${requester}\n>${commit}\n\n ${description}\n\n${installed}${updated}${uninstalled}\n\n${success}\n${failed}`;
+  const header = `> [![icon]][marketplace]\n> ${requester}\n> ${commit}\n`;
+  const footer = `${marketplace}\n${icon}\n${success}\n${failed}`;
+      
+  const report = `${header}\n${description}\n${installed}\n${updated}\n${uninstalled}\n\n${footer}`;
   return report;
 }
 
