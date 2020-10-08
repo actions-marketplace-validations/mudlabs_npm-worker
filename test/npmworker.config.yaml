@@ -10,7 +10,7 @@ update:
   - cardinal-direction
   - "@mudlabs/fake-package"
 uninstall:
-  - unirest
+  - "unirest"
   - "@mudlabs/fake-package"
   - node-fetch
   - short-scale-units
