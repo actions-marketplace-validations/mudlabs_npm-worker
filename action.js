@@ -9,7 +9,7 @@ const logActivityToIssue = activity => number => async octokit => {
   try {
     const log = await octokit.issues.createComment({
       owner: github.context.payload.repository.owner.login,
-      repo: githib.context.payload.repository.name,
+      repo: github.context.payload.repository.name,
       issue_number: number,
       body: activity
     });
