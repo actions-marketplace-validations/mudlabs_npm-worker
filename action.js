@@ -44,15 +44,11 @@ const buildActivityReport = (install, update, uninstall) => {
     if (item.failed) {
       return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}\n`;
     } else {
-      const package_state = `- ![success] \`${item.package}\`\n`;
-      return package_state + item.stdout.split("\n")
-        .filter(value => value !== "")
-        .drop(1,2)
-        .map((value, index) => index === 0 && value.startsWith("audited") 
-             ? `  > Package does not seem to have been _installed_.\n  > ${value}` 
-             : `  > ${value}`
-            )
-        .join("\n")
+      const stdout_array = item.stdout.split("\n").filter(value => value !== "").drop(1,2).map(value => `  > ${value}`);
+      const just_passed = stdout_array[0].startsWith("  > audited");
+      const package_state = `- ![${just_passed ? "passed" : "success"}] \`${item.package}\`\n`;
+      if (just_passed) stdout_array.unshift(`  > Package does not seem to have been _installed_.`);
+      return package_state + stdout_array.join("\n");
     }
   };
   
