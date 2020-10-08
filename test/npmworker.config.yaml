@@ -1,1 +1,13 @@
-[object Object]
+clean: true
+issue: 2
+path: ./test/
+install:
+  - unirest
+  - "@mudlabs/fake-package"
+update:
+  - cardinal-direction
+  - "@mudlabs/fake-package"
+uninstall:
+  - node-fetch
+  - "@mudlabs/fake-package"
+  - unirest
