@@ -20,7 +20,7 @@ Manage node packages on your Github action repository.
 
 | Requirement | Description |
 | :--- | :--- |
-| `npmworker.config.yaml` | You must include the YAML configuration file in your repository. The action first looks for this file in the directory of the `workflow` that triggered it, then in `.github`, and finally in root _(`./`)_. |
+| `npmworker.config.yaml` | You must include the YAML configuration file in your repository. If you do not pass its path to the `config` key in your workflow, the action will look for it in the directory of the `workflow` that triggered the action, then in `.github`, and finally in root _(`./`)_. |
 
 ---
 
@@ -45,7 +45,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Worker
-        uses: mudlabs/npm-worker@1.0.0    
+        uses: mudlabs/npm-worker@1.0.0
+        with:
+          # OPTIONAL: Provide a PAT for the repository, so the
+          # action can log activity to an issue.
+          # Default: github.token
+          toke: ${{ secrets.GITHUB_TOKEN }}
+          # OPTIONAL: Provide a path within your repository to
+          # the YAML configuration file.
+          # If not provided the action will attempt to find it
+          # before failing.
+          config: ./path/to/npmworker.config.yaml
 ```
     
 
@@ -82,7 +92,7 @@ uninstall:
 
 | Prop | Description |
 | :--- | :--- |
-| `activity` | A markdown flavourd description of the activity performed by the action. If `issue` is set as `true` in the configuration file, this is the comment sent to that issue. |
+| `activity` | A markdown flavourd description of the activity performed by the action. If an issue number is specified within the configuration file, this is the comment sent to that issue. |
 
 ---
     
