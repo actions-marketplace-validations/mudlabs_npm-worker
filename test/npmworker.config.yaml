@@ -1,16 +1,1 @@
-clean: true
-issue: 2
-path: ./test/
-install:
-  - cardinal-direction
-  - "@mudlabs/fake-package"
-  - "unirest"
-update:
-  - node-fetch
-  - cardinal-direction
-  - "@mudlabs/fake-package"
-uninstall:
-  - "unirest"
-  - "@mudlabs/fake-package"
-  - node-fetch
-  - short-scale-units
+[object Object]
