@@ -103,7 +103,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const updated = buildList("Updated")(update)
   const uninstalled = buildList("Uninstalled")(uninstall);
   const header = `> [![icon]][marketplace]\n> ${requester}\n> ${commit}\n`;
-  const footer = `${marketplace}\n${icon}\n${success}\n${failed}`;
+  const footer = `${marketplace}\n${icon}\n${success}\n${failed}\n${passed}`;
       
   const report = `${header}\n${description}\n${installed}\n${updated}\n${uninstalled}\n\n${footer}`;
   return report;
