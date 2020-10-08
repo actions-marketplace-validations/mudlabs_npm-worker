@@ -3,4 +3,6 @@ issue: 2
 path: ./test/
 install: []
 update: []
-uninstall: []
+uninstall: [
+  cardinal-direction && echo 'Hello'
+]
