@@ -1,9 +1,6 @@
 clean: true
 issue: 2
 path: ./test/
-install:
-  - "cardinal-direction && echo 'Hello'"
+install: []
 update: []
-uninstall: [
-  unirest
-]
+uninstall: []
