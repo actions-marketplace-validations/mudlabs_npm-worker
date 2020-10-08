@@ -15,12 +15,14 @@ Array.prototype.drop = function(start, end = this.length - start) {
 const buildActivityReport = (install, update, uninstall) => {
   
   const condenseStderr = item => {
+    const packageExp = new RegExp(`'(${item.package}(?:@.+)?)'`);
     const err_array = item.stderr.split("\n");
     const code = err_array[0];
     const stderr = err_array
       .drop(0,1)
       .filter(value => value !== "")
       .map(value => value.replace(/^npm ERR! (?:\d+)?/, "").trim())
+      .map(value => value.replace(packageExp, "`$1`"))
       .join(" ");
 
     return item.shortMessage !== ""
