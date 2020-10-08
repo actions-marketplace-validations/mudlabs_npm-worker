@@ -14,10 +14,24 @@ Array.prototype.drop = function(start, end = this.length - start) {
 
 const buildActivityReport = (install, update, uninstall) => {
   
+  const condenseStderr = item => {
+    const err_array = item.stderr.split("\n");
+    const code = err_array[0];
+    const stderr = err_array
+      .drop(0,1)
+      .filter(value => value !== "")
+      .map(value => value.replace(/^npm ERR! (?:\d+)?/, "").trim())
+      .join(" ");
+
+    return item.shortMessage !== ""
+      ? `${code}\n${item.shortMessage}\n${stderr}`
+      : `${code}\n${stderr}`;
+  }
+  
   const setInstalledItem = item => {
     if (item.failed) {
       console.log(item.stdout)
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}\n`;
+      return `- ![failed] \`${item.package}\`\n  > ${condenseStderr(item)}\n`;
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
@@ -30,7 +44,7 @@ const buildActivityReport = (install, update, uninstall) => {
   const setUpdatedItem = item => {
     console.log(item)
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}\n`
+      return `- ![failed] \`${item.package}\`\n  > ${condenseStderr(item)}\n`
     } else {
       return item.stdout.split("\n")
         .filter(value => value !== "")
@@ -42,7 +56,7 @@ const buildActivityReport = (install, update, uninstall) => {
   
   const setUninstalledItem = item => {
     if (item.failed) {
-      return `- ![failed] \`${item.package}\`\n  > ${item.stderr.split("\n").filter(value => value !== "").join("\n")}\n`;
+      return `- ![failed] \`${item.package}\`\n  > ${condenseStderr(item)}\n`;
     } else {
       const stdout_array = item.stdout.split("\n").filter(value => value !== "").drop(1,2).map(value => `  > ${value}`);
       const just_passed = stdout_array[0].startsWith("  > audited");
