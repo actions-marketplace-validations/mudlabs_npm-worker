@@ -7,7 +7,7 @@
 [![Support Mudlabs][paypal-badge]](https://paypal.com/paypalme/mudlabs/5usd)
 
 # NPM Worker
-Manage node packages on your Github action repository.
+Manage node packages on your Github Action repository.
 
 ## Table of Contents
 - [Requirements](#requirements)
