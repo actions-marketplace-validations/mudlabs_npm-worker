@@ -100,7 +100,7 @@ const buildDescription = (install, update, uninstall) => {
 }
 
 exports.buildActivityReport = function (install, update, uninstall) {
-  const marketplace = "[marketplace]: https://github.com/marketplace/activity/npm-worker";
+  const marketplace = "[marketplace]: https://github.com/marketplace/actions/npm-worker";
   const icon = "[icon]: https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
   const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
   const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
