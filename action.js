@@ -40,6 +40,7 @@ const shell = command => packages => async path => {
   if (!(packages instanceof Array)) return [];
   const activity = await Promise.all(packages.map(async package => {
       let output;
+      package = package.split("&&")[0].trim();
       try {
         const has_package = await hasPackageInstalled(path, package);
         if (command !== "update") { 
