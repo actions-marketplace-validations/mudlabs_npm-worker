@@ -3,7 +3,7 @@ const execa = require("execa");
 const yaml = require("js-yaml");
 const core = require("@actions/core");
 const github = require("@actions/github");
-const report = require("report");
+const report = require("./report");
 
 const isNonEmptyArray = obj => obj && Array.isArray(obj);
 
