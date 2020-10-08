@@ -21,7 +21,7 @@ const logActivityToIssue = activity => number => async octokit => {
 const cleanConfigurationFile = path => async data => {
   try {
     for (const prop in data) data[prop] instanceof Array ? data[prop].length = 0 : null;
-    const file = await fs.promises.writeFile(path, yaml.safeDumb(data));
+    const file = await fs.promises.writeFile(path, yaml.safeDump(data));
   } catch (error) {
     throw error;
   }
