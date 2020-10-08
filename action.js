@@ -5,7 +5,7 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const report = require("./report");
 
-const logActivityToIssue = activity => number => octokit => {
+const logActivityToIssue = activity => number => async octokit => {
   try {
     const log = await octokit.issues.createComment({
       owner: github.context.payload.repository.owner.login,
