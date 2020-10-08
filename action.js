@@ -5,7 +5,7 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const report = require("./report");
 
-const logActivityToIssue = activity => async number => {
+const logActivityToIssue = activity => number => octokit => {
   try {
     const log = await octokit.issues.createComment({
       owner: github.context.payload.repository.owner.login,
@@ -14,7 +14,7 @@ const logActivityToIssue = activity => async number => {
       body: activity
     });
   } catch (error) {
-    console.warn("Log Activity:" error);
+    console.warn("Log Activity:", error);
   }
 }
 
@@ -119,7 +119,7 @@ const initJSON = async path => {
     if (activity_to_report) {
       const activity = report.buildActivityReport(installed, updated, uninstalled);
       core.setOutput(activity);
-      if (data.issue) await logActivityToIssue(activity)(data.issue);
+      if (data.issue) await logActivityToIssue(activity)(data.issue)(octokit);
       if (data.clean) await cleanConfigurationFile(worker_config_path)(data);
     }
     
