@@ -80,11 +80,11 @@ issue: 1
 path: ./dis
 install:
   - "@actions/github"
-  - "unirest"
+  - unirest
 update:
-  - "cardinal-direction"
+  - cardinal-direction
 uninstall:
-  - "node-fetch"
+  - node-fetch
 ```
 
 
