@@ -50,7 +50,7 @@ jobs:
           # OPTIONAL: Provide a PAT for the repository, so the
           # action can log activity to an issue.
           # Default: github.token
-          toke: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           # OPTIONAL: Provide a path within your repository to
           # the YAML configuration file.
           # If not provided the action will attempt to find it
