@@ -13,4 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: ${{ steps.outputs.ref }}
-        run: echo github.ref if ${{ github.ref }}
+        run: |
+          echo github.ref if ${{ github.ref }}
+          echo github.event_name is: ${{ github.event_name }}
