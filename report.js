@@ -95,8 +95,9 @@ const buildDescription = (install, update, uninstall) => {
                        .filter(item => item !== "")
                        .map((item, index, array) => array.length > 1 && index === array.length - 1 ? `and ${item}` : item)
                       ).join(", ");
-
-  return `An update to your configuration file requested [NPM Worker][marketplace] ${opperations}.\n`;
+  const config = `[\`${file}\`](${file_url})`;
+  
+  return `An update to ${config} requested [\`@npm-worker\`][marketplace] ${opperations}.\n`;
 }
 
 exports.buildActivityReport = function (install, update, uninstall) {
