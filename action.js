@@ -110,11 +110,11 @@ const initJSON = async path => {
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow)[0];
     const worker_config_path = getWorkerConfigPath(workflow);
-    if (!worker_config_path) return core.setFailed("Could not locate the 'npmworker.config.yaml' file.");
+    if (!worker_config_path) return core.setFailed("Could not locate the configuration file.");
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
-        
+    return console.log(worker_config_path, data);
     const node_modules_path = data.path || "./";
     const valid_node_modules_path = fs.existsSync(node_modules_path);
     const has_package_json = fs.existsSync(`${node_modules_path}/package.json`);
