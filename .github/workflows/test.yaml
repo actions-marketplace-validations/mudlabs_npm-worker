@@ -13,7 +13,7 @@ jobs:
       - name: Get branch name
         uses: nelonoel/branch-name@v1
       - name: Worker
-        uses: mudlabs/npm-worker@${{ process.env.branch }}
+        uses: mudlabs/npm-worker@${{ env.branch }}
         env:
           branch: ${BRANCH_NAME} 
         with:
