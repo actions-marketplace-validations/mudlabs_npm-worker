@@ -62,30 +62,24 @@ const shell = command => packages => async path => {
 
 const getWorkerConfigPath = workflow => {
   let found_config_path = false;
-  let input_config_path = core.getInput("config");
-  const config_pattern = new RegExp(/^npm\.?worker\.config\.ya?ml$/);
+  const input_config_path = core.getInput("config");
+  const config_pattern = new RegExp(/(?:^|\/)npm\.?worker\.config\.ya?ml$/);
   const workflow_dir_path = workflow.path.substring(0, workflow.path.lastIndexOf("/"));
-  const findFile = files => files.find(file => config_pattern.test(file));
-  const didFindInDirectory = directory => output => {
-    const files = fs.readdirSync(directory);
-    const file = findFile(files);
-    if (!file) return false;
-    output = `${directory}/${file}`;
-    console.log(output, directory, file)
-    return true;
-  }
-  const hasValidInputConfigPath = path => !path ? false : (() => {
-    const is_file = /\.ya?ml$/.test(path);
-    const _path = is_file ? path.slice(0, path.lastIndexOf("/")) : path;
-    return fs.existsSync(path) ? didFindInDirectory(_path)(input_config_path) : false;
-  })();
+  const directories = [workflow_dir_path, ".github", "./"];
   
-  if (hasValidInputConfigPath(input_config_path)) return input_config_path;
-  [workflow_dir_path, ".github", "./"].some(dir_path => {
-    const did_find = didFindInDirectory(dir_path)(found_config_path);
-    return did_find;
+  if (fs.existsSync(input_config_path)) {
+    if (config_pattern.test(input_config_path)) return input_config_path;
+    if (fs.lstatSync(input_config_path).isDirectory()) directories.unshift(input_config_path);
+  }
+  
+  directories.some(dir_path => {
+    const files = fs.readdirSync(dir_path);
+    const file = files.find(file => config_pattern.test(file));
+    if (!file) return false;
+    found_config_path = `${dir_path}/${file}`;
+    return true;
   });
-  fs.readdirSync("./test/").forEach(file => console.log(file));
+  
   console.log(input_config_path, found_config_path)
   return found_config_path;
 };
