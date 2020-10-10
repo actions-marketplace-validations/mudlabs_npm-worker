@@ -11,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Worker
-        uses: ./
+        uses: mudlabs/npm-worker@master
         with:
           config: ./test/
+      - name: Commit
+        uses: EndBug/add-and-commit@v5.1.0
