@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Prints the current branch name
+      - name: all_reports_${{ env.GITHUB_REF }}
         run: echo "${GITHUB_BRANCH##*/}"
         env:
           GITHUB_BRANCH: ${{ github.ref }}
