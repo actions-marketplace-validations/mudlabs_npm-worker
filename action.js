@@ -133,8 +133,8 @@ const initJSON = async path => {
     const activity_to_report = installed.concat(updated, uninstalled).length > 0;
         
     if (activity_to_report) {
-      return core.setFailed("Don't commit");
       const config_txt_link = await getConfigHtmlUrl(octokit)(worker_config_path);
+      return core.setFailed("Don't commit");
       const activity = report.buildActivityReport(installed, updated, uninstalled)(config_txt_link);
       core.setOutput(activity);
       if (data.issue) await logActivityToIssue(activity)(data.issue)(octokit);
