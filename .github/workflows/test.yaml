@@ -4,9 +4,6 @@ on:
   push:
     paths: 
       - test/npm.?worker.config.ya?ml
-
-env:
-  GITHUB_REF: ${{ github.ref }}
    
 jobs:
   test:
@@ -16,7 +13,7 @@ jobs:
       - name: Get branch name
         uses: nelonoel/branch-name@v1
       - run: echo ${BRANCH_NAME}
-#       - name: Worker
-#         run: echo mudlabs/npm-worker@ ${{ env.GITHUB_REF }}
-#         with:
-#           config: ./test/
+      - name: Worker
+        uses: mudlabs/npm-worker@${BRANCH_NAME}
+        with:
+          config: ./test/
