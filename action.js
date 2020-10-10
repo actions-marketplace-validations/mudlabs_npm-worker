@@ -61,20 +61,30 @@ const shell = command => packages => async path => {
 };
 
 const getWorkerConfigPath = workflow => {
-  const config_name = "npmworker.config.yaml"
-  const input_config = core.getInput("config");
+  let found_config_path = false;
+  let input_config_path = core.getInput("config");
+  const config_pattern = new RegExp(/^npm\.?worker\.config\.(?:yaml|yml)$/);
   const workflow_dir_path = workflow.path.substring(0, workflow.path.lastIndexOf("/"));
-  const workflow_config = `${workflow_dir_path}/${config_name}`;
-  const github_config = `.github/${config_name}`;
-  const root_config = `./${config_name}`;
+  const findFileIndex = files => files.find((file, index) => config_pattern.test(file) ? index : null);
+  const didFindInDirectory = directory => output => {
+    const files = fs.readdirSync(directory);
+    const index = findFileIndex(files);
+    if (!index) return false;
+    output = `${directory}/${files[index]}`;
+    return true;
+  }
+  const hasValidInputConfigPath = path => !path ? false : (() => {
+    const is_file = /(?:\.yaml|\.yml)$/.test(path);
+    const _path = is_file ? path.slice(0, path.lastIndexOf("/")) : path;
+    return fs.existsSync(path) ? didFindInDirectory(_path)(input_config_path) : false;
+  })();
   
-  const path = input_config && fs.existsSync(input_config)
-    ? input_config : fs.existsSync(workflow_config) 
-    ? workflow_config : fs.existsSync(github_config)
-    ? github_config : fs.existsSync(root_config)
-    ? root_config : false;
-  
-  return path;
+  if (hasValidInputConfigPath()) return input_config_path;
+  [workflow_dir_path, ".github", "./"].some(dir_path => {
+    const did_find = didFindInDirectory(dir_path)(found_config_path);
+    return did_find;
+  });
+  return found_config_path;
 };
 
 const initJSON = async path => {
