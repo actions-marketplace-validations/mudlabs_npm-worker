@@ -68,22 +68,18 @@ const getWorkerConfigPath = workflow => {
   const findFileIndex = files => files.find((file, index) => config_pattern.test(file) ? index : null);
   const didFindInDirectory = directory => output => {
     const files = fs.readdirSync(directory);
-    console.log("files", files)
     const index = findFileIndex(files);
-    console.log("index", index, files[index]);
     if (!index) return false;
     output = `${directory}/${files[index]}`;
     return true;
   }
   const hasValidInputConfigPath = path => !path ? false : (() => {
     const is_file = /\.ya?ml$/.test(path);
-    console.log("path and is_file", path, is_file)
     const _path = is_file ? path.slice(0, path.lastIndexOf("/")) : path;
-    console.log("_path", _path)
     return fs.existsSync(path) ? didFindInDirectory(_path)(input_config_path) : false;
   })();
   
-  if (hasValidInputConfigPath()) return input_config_path;
+  if (hasValidInputConfigPath(input_config_path)) return input_config_path;
   [workflow_dir_path, ".github", "./"].some(dir_path => {
     const did_find = didFindInDirectory(dir_path)(found_config_path);
     return did_find;
@@ -120,7 +116,7 @@ const initJSON = async path => {
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
-    return console.log(worker_config_path, data);
+    return console.log("worker_config_path and data", worker_config_path, data);
     const node_modules_path = data.path || "./";
     const valid_node_modules_path = fs.existsSync(node_modules_path);
     const has_package_json = fs.existsSync(`${node_modules_path}/package.json`);
