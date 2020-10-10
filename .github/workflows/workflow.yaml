@@ -8,9 +8,11 @@ on:
 jobs:
   prep:
     runs-on: ubuntu-latest
+    outputs:
+      ref: ${{ env.GITHUB_REF }}
     steps:
       - uses: actions/checkout@v2
-      - name: all_reports_${{ env.GITHUB_REF }}
+      - name: ${{ jobs.prep.outputs.ref }}
         run: echo "${GITHUB_BRANCH##*/}"
         env:
           GITHUB_BRANCH: ${{ github.ref }}
