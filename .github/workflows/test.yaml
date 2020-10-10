@@ -10,9 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Get branch name
-        uses: nelonoel/branch-name@v1
       - name: Worker
-        uses: mudlabs/npm-worker@master
+        uses: ./
         with:
           config: ./test/
