@@ -69,6 +69,7 @@ const getWorkerConfigPath = workflow => {
   const didFindInDirectory = directory => output => {
     const files = fs.readdirSync(directory);
     const index = findFileIndex(files);
+    console.log("didFindInDirectory", files, index, files[index])
     if (!index) return false;
     output = `${directory}/${files[index]}`;
     return true;
