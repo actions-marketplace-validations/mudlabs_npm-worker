@@ -63,19 +63,23 @@ const shell = command => packages => async path => {
 const getWorkerConfigPath = workflow => {
   let found_config_path = false;
   let input_config_path = core.getInput("config");
-  const config_pattern = new RegExp(/^npm\.?worker\.config\.(?:yaml|yml)$/);
+  const config_pattern = new RegExp(/^npm\.?worker\.config\.ya?ml$/);
   const workflow_dir_path = workflow.path.substring(0, workflow.path.lastIndexOf("/"));
   const findFileIndex = files => files.find((file, index) => config_pattern.test(file) ? index : null);
   const didFindInDirectory = directory => output => {
     const files = fs.readdirSync(directory);
+    console.log("files", files)
     const index = findFileIndex(files);
+    console.log("index", index, files[index]);
     if (!index) return false;
     output = `${directory}/${files[index]}`;
     return true;
   }
   const hasValidInputConfigPath = path => !path ? false : (() => {
-    const is_file = /(?:\.yaml|\.yml)$/.test(path);
+    const is_file = /\.ya?ml$/.test(path);
+    console.log("path and is_file", path, is_file)
     const _path = is_file ? path.slice(0, path.lastIndexOf("/")) : path;
+    console.log("_path", _path)
     return fs.existsSync(path) ? didFindInDirectory(_path)(input_config_path) : false;
   })();
   
