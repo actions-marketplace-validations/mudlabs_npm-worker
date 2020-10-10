@@ -81,7 +81,6 @@ const getWorkerConfigPath = workflow => {
     return true;
   });
   
-  console.log(input_config_path, found_config_path)
   return found_config_path;
 };
 
@@ -108,12 +107,11 @@ const initJSON = async path => {
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow)[0];
     const worker_config_path = getWorkerConfigPath(workflow);
-    console.log("worker_config_path", worker_config_path)
     if (!worker_config_path) return core.setFailed("Could not locate the configuration file.");
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
-    return console.log("worker_config_path and data", worker_config_path, data);
+    
     const node_modules_path = data.path || "./";
     const valid_node_modules_path = fs.existsSync(node_modules_path);
     const has_package_json = fs.existsSync(`${node_modules_path}/package.json`);
