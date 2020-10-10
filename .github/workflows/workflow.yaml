@@ -12,7 +12,7 @@ jobs:
       ref: ${{ env.GITHUB_REF }}
     steps:
       - uses: actions/checkout@v2
-      - name: ${{ jobs.prep.outputs.ref }}
+      - name: ${{ prep.outputs.ref }}
         run: echo "${GITHUB_BRANCH##*/}"
         env:
           GITHUB_BRANCH: ${{ github.ref }}
