@@ -71,6 +71,7 @@ const getWorkerConfigPath = workflow => {
     const file = findFile(files);
     if (!file) return false;
     output = `${directory}/${file}`;
+    console.log(output, directory, file)
     return true;
   }
   const hasValidInputConfigPath = path => !path ? false : (() => {
@@ -112,6 +113,7 @@ const initJSON = async path => {
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow)[0];
     const worker_config_path = getWorkerConfigPath(workflow);
+    console.log("worker_config_path", worker_config_path)
     if (!worker_config_path) return core.setFailed("Could not locate the configuration file.");
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
