@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Worker
-        uses: ./@flecible-config-name
+        uses: mudlabs/npm-worker/@flecible-config-name
         with:
           config: ./test/
 #       - name: Add & Commit
