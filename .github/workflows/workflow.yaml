@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Echo
-        run: echo ${{ github.context.ref }}
+        run: echo ${{ env.GITHUB_REF }}
