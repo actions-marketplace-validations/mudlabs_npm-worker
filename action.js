@@ -73,10 +73,11 @@ const getWorkerConfigPath = workflow => {
   }
   
   directories.some(dir_path => {
+    const mark = dir_path.endsWith("/") ? "" : "/";
     const files = fs.readdirSync(dir_path);
     const file = files.find(file => config_pattern.test(file));
     if (!file) return false;
-    found_config_path = `${dir_path}/${file}`;
+    found_config_path = `${dir_path}${mark}${file}`;
     return true;
   });
   
