@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Worker
-        uses: ${{ github.ref }}
+        uses: ${{ GITHUB_REF }}
         with:
           config: ./test/
 #       - name: Add & Commit
