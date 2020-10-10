@@ -84,6 +84,8 @@ const getWorkerConfigPath = workflow => {
     const did_find = didFindInDirectory(dir_path)(found_config_path);
     return did_find;
   });
+  fs.readdirSync("./test/").forEach(file => console.log(file));
+  console.log(input_config_path, found_config_path)
   return found_config_path;
 };
 
