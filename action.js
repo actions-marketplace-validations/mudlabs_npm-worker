@@ -61,20 +61,28 @@ const shell = command => packages => async path => {
 };
 
 const getWorkerConfigPath = workflow => {
-  const config_name = "npmworker.config.yaml"
-  const input_config = core.getInput("config");
+  let found_config_path = false;
+  const input_config_path = core.getInput("config");
+  const config_pattern = new RegExp(/(?:^|\/)npm\.?worker\.config\.ya?ml$/);
   const workflow_dir_path = workflow.path.substring(0, workflow.path.lastIndexOf("/"));
-  const workflow_config = `${workflow_dir_path}/${config_name}`;
-  const github_config = `.github/${config_name}`;
-  const root_config = `./${config_name}`;
+  const directories = [workflow_dir_path, ".github", "./"];
   
-  const path = input_config && fs.existsSync(input_config)
-    ? input_config : fs.existsSync(workflow_config) 
-    ? workflow_config : fs.existsSync(github_config)
-    ? github_config : fs.existsSync(root_config)
-    ? root_config : false;
+  if (fs.existsSync(input_config_path)) {
+    if (config_pattern.test(input_config_path)) return input_config_path;
+    if (fs.lstatSync(input_config_path).isDirectory()) directories.unshift(input_config_path);
+  }
   
-  return path;
+  directories.some(dir_path => {
+    const mark = dir_path.endsWith("/") ? "" : "/";
+    const files = fs.readdirSync(dir_path);
+    const file = files.find(file => config_pattern.test(file));
+    if (!file) return false;
+    found_config_path = `${dir_path}${mark}${file}`;
+    return true;
+  });
+  
+  console.log(input_config_path, found_config_path)
+  return found_config_path;
 };
 
 const initJSON = async path => {
@@ -100,11 +108,12 @@ const initJSON = async path => {
     );
     const workflow = workflows.data.workflows.filter(workflow => workflow.name === github.context.workflow)[0];
     const worker_config_path = getWorkerConfigPath(workflow);
-    if (!worker_config_path) return core.setFailed("Could not locate the 'npmworker.config.yaml' file.");
+    console.log("worker_config_path", worker_config_path)
+    if (!worker_config_path) return core.setFailed("Could not locate the configuration file.");
     
     const file = await fs.promises.readFile(worker_config_path, { encoding: "utf-8" });
     const data = yaml.safeLoad(file);
-        
+    return console.log("worker_config_path and data", worker_config_path, data);
     const node_modules_path = data.path || "./";
     const valid_node_modules_path = fs.existsSync(node_modules_path);
     const has_package_json = fs.existsSync(`${node_modules_path}/package.json`);

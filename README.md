@@ -14,20 +14,27 @@ Manage node packages on your Github Action repository.
 - [Usage](#usage)
 - [Notes](#notes)
 
+
 ---
+
 
 ## Requirements
+You must include the YAML configuration file in your repository. If you don't specify its path to the `config` key in your workflow, the action will try to find it in your `.github` directory and then in root _(`./`)_ .
 
-| Requirement | Description |
-| :--- | :--- |
-| `npmworker.config.yaml` | You must include the YAML configuration file in your repository. If you do not pass its path to the `config` key in your workflow, the action will look for it in the directory of the `workflow` that triggered the action, then in `.github`, and finally in root _(`./`)_. |
+Any of the following are accepted config file names.
+- `npmworker.config.yaml`
+- `npmworker.config.yml`
+- `npm.worker.config.yaml`
+- `npm.worker.config.yml`
+
 
 ---
+
 
 ## Usage
 
 #### 1. Implement a Workflow for your action
-- It's a good idea to ensure the action only runs when a change to `npmworker.config.yaml` is made.
+- Here we specify the workflow should only run when a change to our config file is made. 
 ```yaml
 # ./.github/workflows/npmworker.yaml
 
@@ -37,7 +44,7 @@ on:
     branches:
       - master:
     paths:
-      - .github/workflows/npmworker.config.yaml
+      - ./path/to/npmworker.config.yaml
 jobs:
   npm:
     runs-on: ubuntu-latest
@@ -72,9 +79,7 @@ jobs:
 | `uninstall` | An array of packages to uninstall. | |
 
 ```yaml 
-# Example Configuration.
-# ./.github/workflows/npmworker.config.yaml
-
+# Example Configuration
 clean: true
 issue: 1
 path: ./dis
@@ -94,8 +99,10 @@ uninstall:
 | :--- | :--- |
 | `activity` | A markdown flavourd description of the activity performed by the action. If an issue number is specified within the configuration file, this is the comment sent to that issue. |
 
+
 ---
-    
+
+
 ## Notes
 - If no `package.json` file is located at `path`, the action will create one using `npm init -y`.
 - If you want the `node_modules` and `packages` to persist on your repository you will need to commit the changes. I recommend using the [Add and Commit](https://github.com/marketplace/actions/add-commit) action for this.

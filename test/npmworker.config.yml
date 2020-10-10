@@ -1,0 +1,6 @@
+clean: true
+issue: 2
+path: ./test/
+install: [ trump ]
+update: [ liberty ]
+uninstall: [ socialism ]

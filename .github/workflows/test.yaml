@@ -3,7 +3,7 @@ name: Test Worker
 on:
   push:
     paths: 
-      - test/npmworker.config.yaml
+      - test/npm.?worker.config.ya?ml
    
 jobs:
   test:
@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Worker
-        uses: ./
+        uses: mudlabs/npm-worker/@flecible-config-name
         with:
-          config: ./test/npmworker.config.yaml
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@v5.0.0
+          config: ./test/
+#       - name: Add & Commit
+#         uses: EndBug/add-and-commit@v5.0.0
