@@ -1,9 +1,6 @@
 clean: true
 issue: 2
 path: ./test/
-install: [ ]
-update: [ ]
-uninstall: [ socialism ]
-
-
-
+install: []
+update: []
+uninstall: []
