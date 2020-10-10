@@ -13,7 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Worker
-        uses: mudlabs/npm-worker@${{ env.GITHUB_REF }}
-        with:
-          config: ./test/
+      - name: Get branch name
+        uses: nelonoel/branch-name@v1
+      - run: echo ${BRANCH_NAME}
+#       - name: Worker
+#         run: echo mudlabs/npm-worker@ ${{ env.GITHUB_REF }}
+#         with:
+#           config: ./test/
