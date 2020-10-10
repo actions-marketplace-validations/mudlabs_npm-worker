@@ -21,7 +21,9 @@ const logActivityToIssue = activity => number => async octokit => {
 const cleanConfigurationFile = path => async data => {
   try {
     for (const prop in data) data[prop] instanceof Array ? data[prop].length = 0 : null;
+    console.log(data, path);
     const file = await fs.promises.writeFile(path, yaml.safeDump(data));
+    console.log(file);
   } catch (error) {
     throw error;
   }
@@ -127,6 +129,7 @@ const initJSON = async path => {
     if (activity_to_report) {
       const activity = report.buildActivityReport(installed, updated, uninstalled);
       core.setOutput(activity);
+      console.log(data.clean);
       if (data.issue) await logActivityToIssue(activity)(data.issue)(octokit);
       if (data.clean) await cleanConfigurationFile(worker_config_path)(data);
     }
