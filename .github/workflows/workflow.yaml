@@ -13,6 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: ${{ steps.outputs.ref }}
-        run: echo "${GITHUB_BRANCH##*/}"
-        env:
-          GITHUB_BRANCH: ${{ github.ref }}
+        run: echo github.ref if ${{ github.ref }}
