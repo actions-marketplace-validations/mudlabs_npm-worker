@@ -3,7 +3,7 @@ name: Test Worker
 on:
   push:
     paths: 
-      - test/npmworker.config.yaml
+      - test/npm.?worker.config.ya?ml
    
 jobs:
   test:
@@ -13,6 +13,6 @@ jobs:
       - name: Worker
         uses: ./
         with:
-          config: ./test/npmworker.config.yaml
+          config: ./test/
       - name: Add & Commit
         uses: EndBug/add-and-commit@v5.0.0
