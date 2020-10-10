@@ -13,6 +13,6 @@ jobs:
       - name: Get branch name
         uses: nelonoel/branch-name@v1
       - name: Worker
-        uses: ${{ mudlabs/npm-worker@master }}
+        uses: mudlabs/npm-worker@master
         with:
           config: ./test/
