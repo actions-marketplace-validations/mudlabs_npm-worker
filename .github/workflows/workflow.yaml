@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Echo
-        run: echo ${{ env.GITHUB_REF }}
+        run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
