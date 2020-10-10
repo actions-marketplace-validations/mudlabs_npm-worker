@@ -9,7 +9,7 @@ const report = require("./report");
 const getConfigHtmlUrl = octokit => async (path) => {
   const owner = github.context.payload.repository.owner.login;
   const repo = github.context.payload.repository.name;
-  const file = octokit.request(`GET /repos/${owner}/${repo}/contents/${path}`);
+  const file = await octokit.request(`GET /repos/${owner}/${repo}/contents/${path}`);
   console.log("html_url", file);
 }
 
