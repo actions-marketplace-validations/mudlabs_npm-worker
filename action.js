@@ -65,7 +65,14 @@ const getWorkerConfigPath = workflow => {
   let input_config_path = core.getInput("config");
   const config_pattern = new RegExp(/^npm\.?worker\.config\.ya?ml$/);
   const workflow_dir_path = workflow.path.substring(0, workflow.path.lastIndexOf("/"));
-  const findFileIndex = files => files.find((file, index) => config_pattern.test(file) ? index : null);
+  const findFileIndex = files => files.find((file, index) => {
+    console.log("findFileIndex", file, index);
+    if(config_pattern.test(file)) {
+      return index
+    } else {
+      return false;
+    }
+  });
   const didFindInDirectory = directory => output => {
     const files = fs.readdirSync(directory);
     const index = findFileIndex(files);
