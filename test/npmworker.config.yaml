@@ -1,6 +1,6 @@
 clean: true
 issue: 2
 path: ./test/
-install: [ covid19 ]
-update: [ socialism ]
-uninstall: [ freedom ]
+install: []
+update: []
+uninstall: []
