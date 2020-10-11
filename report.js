@@ -120,14 +120,14 @@ const buildActivityReport = (install, update, uninstall) => config_path => async
   const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
   const passed = "[passed]: https://via.placeholder.com/15/e6c620/000000?text=+";
   const sender = github.context.payload.sender;
-  const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
-  const commit = `Triggered by commit ${github.context.sha}`;
+  const requester = `Requester [\`@${sender.login}\`](https://github.com/${sender.login})`;
+  const trigger = `Trigger ${github.context.sha}`;
   const config_text_url = await getConfigHtmlUrl(config_path)(octokit);
   const description = buildDescription(install, update, uninstall, config_text_url);
   const installed = buildList("Installed")(install)
   const updated = buildList("Updated")(update)
   const uninstalled = buildList("Uninstalled")(uninstall);
-  const header = `> [![icon]][marketplace]\n> ${requester}\n> ${commit}\n`;
+  const header = `> [![icon]][marketplace]\n> ${requester}\n> ${trigger}\n`;
   const footer = `${marketplace}\n${icon}\n${success}\n${failed}\n${passed}`;
 
   return `${header}\n\n${description}\n${installed}\n${updated}\n${uninstalled}\n\n${footer}`
