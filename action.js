@@ -85,9 +85,13 @@ const getWorkerConfigPath = workflow => {
   return found_config_path;
 };
 
-const initJSON = async path => {
+const initJSON = path => async init => {
   try {
     const file_path = `${path}/package.json`;
+    
+    if (init === false) return;
+    if (fs.existsSync(file_path)) return;
+    
     const {stdout} = await execa.command('npm init -y');
     const json = stdout.substring(stdout.indexOf("{"));
     await fs.promises.writeFile(file_path, json);
@@ -118,7 +122,7 @@ const initJSON = async path => {
     const has_package_json = fs.existsSync(`${node_modules_path}/package.json`);
 
     if (!valid_node_modules_path) return core.setFailed(`The path for node_modules does not exist.`);
-    if (!has_package_json) await initJSON(node_modules_path);  
+    if (!has_package_json) await initJSON(node_modules_path)(data.init);  
     
     const installed = await shell("install")(data.install)(node_modules_path);
     const updated = await shell("update")(data.update)(node_modules_path);

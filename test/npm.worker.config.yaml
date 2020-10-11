@@ -1,5 +1,6 @@
 clean: true
 issue: 4
+init: false
 path: ./test/
 install: []
 update: []
