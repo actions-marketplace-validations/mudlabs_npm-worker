@@ -87,7 +87,7 @@ const getConfigHtmlUrl = path => async octokit => {
     const ref = process.env.GITHUB_REF.replace(/^refs\/heads\//, "");
     const owner = github.context.payload.repository.owner.login;
     const repo = github.context.payload.repository.name;
-    const file = await octokit.request(`GET /repos/${owner}/${repo}/contents/${_path}@${ref}`);
+    const file = await octokit.request(`GET /repos/${owner}/${repo}/contents/${_path}/${ref}`);
     return `[\`${file.data.name}\`](${file.data.html_url})`;
   } catch (error) {
     throw error;
