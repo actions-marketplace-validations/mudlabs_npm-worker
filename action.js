@@ -87,8 +87,11 @@ const getWorkerConfigPath = workflow => {
 
 const initJSON = path => async init => {
   try {
-    if (!init) return;
     const file_path = `${path}/package.json`;
+    
+    if (init === false) return;
+    if (fs.existsSync(file_path)) return;
+    
     const {stdout} = await execa.command('npm init -y');
     const json = stdout.substring(stdout.indexOf("{"));
     await fs.promises.writeFile(file_path, json);
