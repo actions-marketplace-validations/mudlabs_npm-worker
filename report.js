@@ -81,7 +81,20 @@ const buildList = title => items => {
   return list;
 };
 
-const buildDescription = (install, update, uninstall) => (config) => {
+const getConfigHtmlUrl = path => async octokit => {
+  try {
+    const _path = path.replace(/^(?:\.\/|\/)/, "");
+    const ref = github.ref.replace(/^ref\/head\//, "");
+    const owner = github.context.payload.repository.owner.login;
+    const repo = github.context.payload.repository.name;
+    const file = await octokit.request(`GET /repos/${owner}/${repo}/contents/${_path}@${ref}`);
+    return `[\`${file.data.name}\`](${file.data.html_url})`;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const buildDescription = (install, update, uninstall, config) => {
   const numberOfPackages = items => {
     const number = items.length;
     return `${number} package${number === 1 ? "" : "s"}`;
@@ -99,24 +112,24 @@ const buildDescription = (install, update, uninstall) => (config) => {
   return `An update to ${config} requested [\`@npm-worker\`][marketplace] ${opperations}.\n`;
 }
 
-exports.buildActivityReport = function (install, update, uninstall) {
-  return function (config_text_link) {
-    const marketplace = "[marketplace]: https://github.com/marketplace/actions/npm-worker";
-    const icon = "[icon]: https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
-    const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
-    const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
-    const passed = "[passed]: https://via.placeholder.com/15/e6c620/000000?text=+";
-    const sender = github.context.payload.sender;
-    const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
-    const commit = `Triggered by commit ${github.context.sha}`;
-    const description = buildDescription(install, update, uninstall)(config_text_link);
-    const installed = buildList("Installed")(install)
-    const updated = buildList("Updated")(update)
-    const uninstalled = buildList("Uninstalled")(uninstall);
-    const header = `> [![icon]][marketplace]\n> ${requester}\n> ${commit}\n`;
-    const footer = `${marketplace}\n${icon}\n${success}\n${failed}\n${passed}`;
+const buildActivityReport = (install, update, uninstall) => config_path => async octokit => {
+  const marketplace = "[marketplace]: https://github.com/marketplace/actions/npm-worker";
+  const icon = "[icon]: https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
+  const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
+  const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
+  const passed = "[passed]: https://via.placeholder.com/15/e6c620/000000?text=+";
+  const sender = github.context.payload.sender;
+  const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
+  const commit = `Triggered by commit ${github.context.sha}`;
+  const config_text_url = await getConfigHtmlUrl(config_path)(octokit);
+  const description = buildDescription(install, update, uninstall, config_text_url);
+  const installed = buildList("Installed")(install)
+  const updated = buildList("Updated")(update)
+  const uninstalled = buildList("Uninstalled")(uninstall);
+  const header = `> [![icon]][marketplace]\n> ${requester}\n> ${commit}\n`;
+  const footer = `${marketplace}\n${icon}\n${success}\n${failed}\n${passed}`;
 
-
-    return `${header}\n\n${description}\n${installed}\n${updated}\n${uninstalled}\n\n${footer}`
-  }
+  return `${header}\n\n${description}\n${installed}\n${updated}\n${uninstalled}\n\n${footer}`
 }
+
+exports.buildActivityReport = buildActivityReport;
