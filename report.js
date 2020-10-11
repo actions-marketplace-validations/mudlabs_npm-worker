@@ -92,7 +92,7 @@ const getConfigHtmlUrl = path => async octokit => {
     return `[\`${file.data.name}\`](${file.data.html_url})`;
   } catch (error) {
     const file_name = path.replace(/(?:(?!npm).)*/, "");
-    return `\`${file_name.}\``;
+    return `\`${file_name}\``;
   }
 }
 
