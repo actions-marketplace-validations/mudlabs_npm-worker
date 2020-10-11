@@ -81,7 +81,22 @@ const buildList = title => items => {
   return list;
 };
 
-const buildDescription = (install, update, uninstall) => {
+const getConfigHtmlUrl = path => async octokit => {
+  try {
+    const file = await octokit.repos.getContent({
+      owner: github.context.payload.repository.owner.login,
+      repo: github.context.payload.repository.name,
+      path: path.replace(/^(?:\.\/|\/)/, ""),
+      ref: process.env.GITHUB_REF.replace(/^refs\/heads\//, "")
+    });
+    return `[\`${file.data.name}\`](${file.data.html_url})`;
+  } catch (error) {
+    const file_name = path.replace(/(?:(?!npm).)*/, "");
+    return `\`${file_name}\``;
+  }
+}
+
+const buildDescription = (install, update, uninstall, config) => {
   const numberOfPackages = items => {
     const number = items.length;
     return `${number} package${number === 1 ? "" : "s"}`;
@@ -95,27 +110,28 @@ const buildDescription = (install, update, uninstall) => {
                        .filter(item => item !== "")
                        .map((item, index, array) => array.length > 1 && index === array.length - 1 ? `and ${item}` : item)
                       ).join(", ");
-
-  return `An update to your configuration file requested [NPM Worker][marketplace] ${opperations}.\n`;
+  
+  return `An update to ${config} requested [\`@npm-worker\`][marketplace] ${opperations}.\n`;
 }
 
-exports.buildActivityReport = function (install, update, uninstall) {
+const buildActivityReport = (install, update, uninstall) => config_path => async octokit => {
   const marketplace = "[marketplace]: https://github.com/marketplace/actions/npm-worker";
   const icon = "[icon]: https://github.com/mudlabs/npm-worker/raw/master/npm_worker_icon.png";
   const success = "[success]: https://via.placeholder.com/15/15f06e/000000?text=+";
   const failed = "[failed]: https://via.placeholder.com/15/f03c15/000000?text=+";
   const passed = "[passed]: https://via.placeholder.com/15/e6c620/000000?text=+";
   const sender = github.context.payload.sender;
-  const requester = `Requested by [\`@${sender.login}\`](https://github.com/${sender.login})`;
-  const commit = `Triggered by commit ${github.context.sha}`;
-  const description = buildDescription(install, update, uninstall);
+  const requester = `Requester [\`@${sender.login}\`](https://github.com/${sender.login})`;
+  const trigger = `Trigger ${github.context.sha}`;
+  const config_text_url = await getConfigHtmlUrl(config_path)(octokit);
+  const description = buildDescription(install, update, uninstall, config_text_url);
   const installed = buildList("Installed")(install)
   const updated = buildList("Updated")(update)
   const uninstalled = buildList("Uninstalled")(uninstall);
-  const header = `> [![icon]][marketplace]\n> ${requester}\n> ${commit}\n`;
+  const header = `> [![icon]][marketplace]\n> ${requester}\n> ${trigger}\n`;
   const footer = `${marketplace}\n${icon}\n${success}\n${failed}\n${passed}`;
-  
-  
-  return `${header}\n\n${description}\n${installed}\n${updated}\n${uninstalled}\n\n${footer}`
 
+  return `${header}\n\n${description}\n${installed}\n${updated}\n${uninstalled}\n\n${footer}`
 }
+
+exports.buildActivityReport = buildActivityReport;

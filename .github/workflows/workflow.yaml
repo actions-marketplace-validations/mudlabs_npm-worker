@@ -8,7 +8,5 @@ on:
 jobs:
   prep:
     runs-on: ubuntu-latest
-    outputs:
-      ref: ${{ env.GITHUB_REF }}
     steps:
       - uses: actions/checkout@v2

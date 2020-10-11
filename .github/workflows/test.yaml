@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
       - name: Worker
-        uses: mudlabs/npm-worker@master
+        uses: ./
         with:
           config: ./test/
       - name: Commit

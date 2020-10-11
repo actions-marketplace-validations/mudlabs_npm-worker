@@ -1,5 +1,5 @@
 clean: true
-issue: 2
+issue: 4
 path: ./test/
 install: []
 update: []

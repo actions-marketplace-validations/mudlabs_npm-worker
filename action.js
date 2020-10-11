@@ -5,6 +5,7 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const report = require("./report");
 
+
 const logActivityToIssue = activity => number => async octokit => {
   try {
     const log = await octokit.issues.createComment({
@@ -125,7 +126,7 @@ const initJSON = async path => {
     const activity_to_report = installed.concat(updated, uninstalled).length > 0;
         
     if (activity_to_report) {
-      const activity = report.buildActivityReport(installed, updated, uninstalled);
+      const activity = await report.buildActivityReport(installed, updated, uninstalled)(worker_config_path)(octokit);
       core.setOutput(activity);
       if (data.issue) await logActivityToIssue(activity)(data.issue)(octokit);
       if (data.clean) await cleanConfigurationFile(worker_config_path)(data);
