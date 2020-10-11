@@ -4,7 +4,7 @@
 
 [![Github Action][action-badge]](https://github.com/marketplace/action/npm-worker)
 &nbsp;
-[![Support Mudlabs][paypal-badge]](https://paypal.com/paypalme/mudlabs/5usd)
+[![Support Mudlabs][paypal-badge]](https://paypal.com/paypalme/mudlabs/)
 
 # NPM Worker
 Manage node packages on your Github Action repository.
