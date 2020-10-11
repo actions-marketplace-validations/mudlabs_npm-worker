@@ -127,6 +127,7 @@ const initJSON = async path => {
         
     if (activity_to_report) {
       const activity = await report.buildActivityReport(installed, updated, uninstalled)(worker_config_path)(octokit);
+      console.log(activity);
       throw new Error("Just testing, don't commit");
       core.setOutput(activity);
       if (data.issue) await logActivityToIssue(activity)(data.issue)(octokit);
