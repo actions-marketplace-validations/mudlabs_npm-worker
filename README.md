@@ -72,6 +72,7 @@ jobs:
 | Prop | Description | Default |
 | :--- | :--- | :--- |
 | `clean` | Specifies the action should edit the configuration file apon execution. This way every time you update the file it's a clean list of commands. Only the `install`, `update`, and `uninstall` arrays will be emptied, and they will be regardless of the package execution outcome. | `false` |
+| `init` | Specifies the action should create a `package.json` file at `path` if one is not there. If the package does need to init, it will do so using `npm init -y`. | `true` |
 | `issue` | You may provide an issue number to track activity. If set this action will post comments to the issue detailing what has changed, whenever it runs. For an example of what these comments will look like see the [Test Logs](https://github.com/mudlabs/npm-worker/issues/4) issue. | |
 | `path` | Specifies a path from your repository _root_, where you would like _node_modules_ located. | `./` |
 | `install` | An array of npm packages you want installed. | |
@@ -81,6 +82,7 @@ jobs:
 ```yaml 
 # Example Configuration
 clean: true
+init: true
 issue: 1
 path: ./dis
 install:
@@ -104,7 +106,6 @@ uninstall:
 
 
 ## Notes
-- If no `package.json` file is located at `path`, the action will create one using `npm init -y`.
 - If you want the `node_modules` and `packages` to persist on your repository you will need to commit the changes. I recommend using the [Add and Commit](https://github.com/marketplace/actions/add-commit) action for this.
 - You can not chain executions. Each array item is checked for, and broken at any instance of `&&`.
 - Each array item is executed as `npm x item` _(i.e. npm install unirest)_.
