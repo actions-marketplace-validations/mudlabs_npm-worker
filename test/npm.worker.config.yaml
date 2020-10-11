@@ -3,4 +3,4 @@ issue: 2
 path: ./test/
 install: []
 update: []
-uninstall: [trump, liberty, js-yaml, execa]
+uninstall: []
