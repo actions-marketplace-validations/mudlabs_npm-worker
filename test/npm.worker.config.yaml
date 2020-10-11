@@ -1,6 +1,7 @@
 clean: true
 issue: 4
+init: false
 path: ./test/
-install: []
-update: []
+install: [ short-scale-units ]
+update: [ execa ]
 uninstall: []
