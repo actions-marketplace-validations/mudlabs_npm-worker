@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Worker
-        uses: mudlabs/npm-worker@1.0.1
+        uses: mudlabs/npm-worker@1.3.0
         with:
           # OPTIONAL: Provide a PAT for the repository, so the
           # action can log activity to an issue.
