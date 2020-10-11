@@ -5,7 +5,9 @@
   "main": "action.js",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0"
+    "@actions/github": "^4.0.0",
+    "cardinal-direction": "^1.0.0",
+    "execa": "^4.0.3"
   },
   "devDependencies": {},
   "scripts": {

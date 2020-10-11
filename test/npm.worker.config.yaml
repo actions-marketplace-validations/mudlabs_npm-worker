@@ -1,6 +1,6 @@
 clean: true
 issue: 4
 path: ./test/
-install: [ cardinal-direction ]
-update: [ execa ]
-uninstall: [ hillary-clinton ]
+install: []
+update: []
+uninstall: []
