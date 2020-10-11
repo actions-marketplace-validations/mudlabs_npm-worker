@@ -6,14 +6,6 @@ const github = require("@actions/github");
 const report = require("./report");
 
 
-const getConfigHtmlUrl = octokit => async (path) => {
-  const _path = path.replace(/^(?:\.\/|\/)/, "");
-  const owner = github.context.payload.repository.owner.login;
-  const repo = github.context.payload.repository.name;
-  const file = await octokit.request(`GET /repos/${owner}/${repo}/contents/${_path}`);
-  console.log("html_url", file);
-}
-
 const logActivityToIssue = activity => number => async octokit => {
   try {
     const log = await octokit.issues.createComment({
@@ -134,9 +126,7 @@ const initJSON = async path => {
     const activity_to_report = installed.concat(updated, uninstalled).length > 0;
         
     if (activity_to_report) {
-      const config_txt_link = await getConfigHtmlUrl(octokit)(worker_config_path);
-      return core.setFailed("Don't commit");
-      const activity = report.buildActivityReport(installed, updated, uninstalled)(config_txt_link);
+      const activity = await report.buildActivityReport(installed, updated, uninstalled)(worker_config_path)(octokit);
       core.setOutput(activity);
       if (data.issue) await logActivityToIssue(activity)(data.issue)(octokit);
       if (data.clean) await cleanConfigurationFile(worker_config_path)(data);
