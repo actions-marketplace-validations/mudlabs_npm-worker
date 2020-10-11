@@ -84,7 +84,7 @@ const buildList = title => items => {
 const getConfigHtmlUrl = path => async octokit => {
   try {
     const _path = path.replace(/^(?:\.\/|\/)/, "");
-    const file = await octokit.repos.getContents({
+    const file = await octokit.repos.getContent({
       owner: github.context.payload.repository.owner.login,
       repo: github.context.payload.repository.name,
       ref: process.env.GITHUB_SHA,
