@@ -7,7 +7,9 @@
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "execa": "^4.0.3",
-    "js-yaml": "^3.14.0"
+    "js-yaml": "^3.14.0",
+    "liberty": "^0.3.1",
+    "trump": "^0.1.0"
   },
   "devDependencies": {},
   "scripts": {
