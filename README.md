@@ -1,8 +1,11 @@
 [action-badge]: https://img.shields.io/badge/-Action-24292e?logo=github&style=for-the-badge
 [paypal-badge]: https://img.shields.io/badge/-Support-f3f4f6?logo=paypal&style=for-the-badge
 [brave-badge]: https://img.shields.io/badge/-Tip-f3f4f6?logo=brave&style=for-the-badge
+[sponsor]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/mudlabs/shieldsio/endpoint/badges/github-sponsor.json
 
 [![Github Action][action-badge]](https://github.com/marketplace/action/npm-worker)
+&nbsp;
+[![Sponsor Mudlabs][sponsor]](https://github.com/sponsors/mudlabs)
 &nbsp;
 [![Support Mudlabs][paypal-badge]](https://paypal.com/paypalme/mudlabs/)
 
